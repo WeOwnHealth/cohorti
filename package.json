@@ -1,0 +1,13 @@
+{
+  "name": "weownhealth-trials",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace @weownhealth/trials-backend",
+    "dev:frontend": "npm run dev --workspace @weownhealth/trials-frontend",
+    "build": "npm run build --workspaces --if-present"
+  }
+}
