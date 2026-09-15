@@ -1,0 +1,187 @@
+// This file is part of WeOwnHealth/trials.
+// Copyright (C) 2026 WeOwnHealth contributors.
+// SPDX-License-Identifier: Apache-2.0
+//
+// HealthClaimGate — Wave 1 first pass (Buildathon #1 · Midnight.Network).
+//
+// Dual-ledger clinical-trial eligibility gate. Public ledger carries only
+// credential commitments, the trusted issuer id, trial criteria, and the
+// latest ✅/❌ proof result. Raw biomarker values, the blinding salt, and the
+// consent record live in the patient's wallet as witnesses and never touch
+// the chain. Per the architecture doc:
+//
+//   issue_credential  →  issueCredential  (trusted issuer writes the commitment)
+//   prove_claim       →  proveClaim       (ZK threshold check + consent binding)
+//
+// Wave-1 honesty notes:
+//   - The issuer's W3C VC signature verification is DEFERRED to Wave 2;
+//     Wave 1 = on-ledger commitment + active flag (README says so).
+//   - `now` is caller-supplied; TimeProvider-based expiry is a Wave-2 fold.
+//   - Issuer identity + trial criteria are demo values baked at deploy
+//     (hardcoded-demo posture from the architect's Wave-1 ship scope).
+
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// ============================================================ public types
+export struct CredentialEntry {
+  commitment: Bytes<32>,   // persistentHash([patient, markerId, value, salt])
+  issuer: Bytes<32>,       // trust anchor that attests the credential
+  active: Boolean,         // Wave 2: revocation circuit toggles this
+}
+
+export struct TrialCriteria {
+  markerId: Bytes<32>,     // persistentHash("hcg:marker:", label)
+  threshold: Uint<64>,     // integer-only inclusion threshold (e.g. 200 mg/dL).
+                           // Compact has no float type — see CONTRACT_GOTCHAS.md
+  active: Boolean,         // Wave 2: createTrial/closeTrial circuits
+}
+
+// Salt-blinded preimage of the on-ledger commitment. `value` is WITNESS ONLY.
+export struct CommitmentPreimage {
+  patient: Bytes<32>,
+  markerId: Bytes<32>,
+  value: Uint<64>,
+  salt: Bytes<32>
+}
+
+// What a verifier may read about a proof: one eligibility bit + scope + nonce.
+export struct ProofResult {
+  patient: Bytes<32>,      // pseudonymous patient id (persistentHash of sk)
+  verifierId: Bytes<32>,   // scope: who asked
+  scopeMarker: Bytes<32>,  // scope: which trial marker was proven
+  eligible: Boolean,       // THE one disclosed bit
+  nonce: Bytes<32>,        // freshness / replay guard
+}
+
+// ================================================================ ledger
+export ledger credentials: Map<Bytes<32>, CredentialEntry>;
+export ledger authorizedIssuer: Bytes<32>;   // Wave-1 trust anchor (set at deploy)
+export ledger trial: TrialCriteria;          // Wave-1 single hardcoded trial
+export ledger lastProof: Maybe<ProofResult>; // verifiers read ✅/❌ here
+
+// ============================================================== witnesses
+// All private values come from the patient wallet / issuer backend at call
+// time. Nothing below is ever stored on the ledger.
+witness patientSecretKey(): Bytes<32>;
+witness biomarkerValue(): Uint<64>;
+witness commitmentSalt(): Bytes<32>;
+witness issuerSecretKey(): Bytes<32>;
+witness consentVerifierId(): Bytes<32>;
+witness consentScope(): Bytes<32>;
+witness consentIssuedAt(): Uint<64>;
+witness consentExpiresAt(): Uint<64>;
+witness requestNonce(): Bytes<32>;
+
+// ============================================================ constructor
+// Demo defaults (arch: "hardcoded demo credentials"). Wave 2: deploy-time
+// args / registerIssuer + createTrial circuits make these configurable.
+constructor() {
+  authorizedIssuer = issuerPublicKey(pad(32, "hcg:demo:issuer-sk"));
+  trial = TrialCriteria {
+    markerId: markerOf(pad(32, "cholesterol")),
+    threshold: 200,          // Uint<64>, integer-only (mg/dL)
+    active: true
+  };
+  lastProof = none<ProofResult>();
+}
+
+// ========================================================= pure helpers
+// Domain-separated id derivation (persistentHash lets us hash structs).
+export pure circuit issuerPublicKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "hcg:issuer:"), sk]);
+}
+
+export pure circuit patientPublicKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "hcg:patient:"), sk]);
+}
+
+export pure circuit markerOf(label: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "hcg:marker:"), label]);
+}
+
+export pure circuit commitmentOf(preimage: CommitmentPreimage): Bytes<32> {
+  return persistentHash<CommitmentPreimage>(preimage);
+}
+
+// ============================================================ circuits
+// issue_credential — trusted issuer writes {commitment, issuer, active}.
+// The issuer never sees value/salt: the patient's wallet computes the
+// commitment and the issuer only attests it (knowledge of issuerSecretKey
+// proves the caller is the trust anchor).
+export circuit issueCredential(
+  patient: Bytes<32>,        // public: patient id (patientPublicKey(sk))
+  commitment: Bytes<32>,     // public: persistentHash preimage (see above)
+): [] {
+  assert(
+    issuerPublicKey(issuerSecretKey()) == authorizedIssuer,
+    "Unauthorized issuer"
+  );
+  credentials.insert(
+    disclose(patient),
+    disclose(CredentialEntry {
+      commitment: disclose(commitment),
+      issuer: authorizedIssuer,
+      active: true
+    })
+  );
+}
+
+// prove_claim — patient proves, in zero knowledge, that
+//   (a) a valid active credential exists for them,
+//   (b) the recorded commitment re-derives from their private witness,
+//   (c) their (integer) biomarker clears the trial threshold,
+//   (d) consent covers {this verifier, this scope} and is time-live.
+// A proof that compiles to success IS the ✅; the ❌ path is an assertion
+// failure (the negative tests exercise exactly those).
+export circuit proveClaim(
+  verifierId: Bytes<32>,     // public: requester scope
+  requestedMarker: Bytes<32>,// public: trial marker being verified
+  now: Uint<64>,             // public: caller-supplied time (Wave-2 TimeProvider)
+): [] {
+  const patient = patientPublicKey(patientSecretKey());
+  const value = biomarkerValue();
+
+  // (a) credential validity
+  assert(credentials.member(disclose(patient)), "No credential on file for patient");
+  const entry = credentials.lookup(disclose(patient));
+  assert(entry.active, "Credential is inactive");
+
+  // (b) trial gate first — a requested marker outside the trial is a category
+  // error, so it must fail BEFORE the commitment binding (otherwise the
+  // marker-in-trial assert would be unreachable: any non-trial marker would
+  // always trip the commitment mismatch first).
+  assert(trial.active, "Trial is closed");
+  assert(requestedMarker == trial.markerId, "Marker not part of trial criteria");
+
+  // (c) commitment re-derivation (binds value+salt without revealing them)
+  const preimage = CommitmentPreimage {
+    patient: patient,
+    markerId: requestedMarker,
+    value: value,
+    salt: commitmentSalt()
+  };
+  assert(
+    commitmentOf(preimage) == entry.commitment,
+    "Credential commitment mismatch"
+  );
+
+  // (d) integer threshold — no floats, one biomarker
+  assert(value < trial.threshold, "Threshold not met");
+
+  // (e) consent binding — verifier + scope + time window
+  assert(consentVerifierId() == verifierId, "Consent does not cover this verifier");
+  assert(consentScope() == requestedMarker, "Consent does not cover requested scope");
+  assert(consentIssuedAt() <= now, "Consent not yet active");
+  assert(now < consentExpiresAt(), "Consent expired");
+
+  // Disclose ONE bit + freshness/scope to the public ledger.
+  lastProof = disclose(some<ProofResult>(ProofResult {
+    patient: patient,
+    verifierId: verifierId,
+    scopeMarker: requestedMarker,
+    eligible: true,
+    nonce: requestNonce()
+  }));
+}
