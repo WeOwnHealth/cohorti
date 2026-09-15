@@ -224,15 +224,10 @@ const main = async (): Promise<void> => {
 };
 
 main().catch(async (e) => {
-  let err: unknown = e;
-  let depth = 0;
-  while (err && depth < 6) {
-    const msg = (err as { message?: string }).message ?? String(err);
-    console.error(`deploy failed (depth ${depth}): ${msg}`);
-    const cause = (err as { cause?: unknown }).cause;
-    if (cause === undefined || cause === err) break;
-    err = cause;
-    depth++;
-  }
+  console.error('---FULL ERROR ---');
+  console.error(e);
+  console.error('---STACK---');
+  console.error((e as { stack?: string }).stack);
+  console.error('---END---');
   process.exit(1);
 });

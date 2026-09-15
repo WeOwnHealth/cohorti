@@ -1,0 +1,8 @@
+{
+  "name": "trials-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "yarn@4.9.2"
+}

@@ -1,0 +1,7 @@
+.yarn/
+.yarn/*
+node_modules/
+packages/contract/midnight-level-db/
+packages/deploy-ui/
+packages/contract/scripts/preview-deploy.ts
+packages/contract/scripts/standalone-deploy.ts

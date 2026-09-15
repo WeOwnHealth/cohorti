@@ -46,6 +46,8 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
     signData(payload: Uint8Array): string;
   };
 
+  private masterSeed: string = '';
+
   private constructor(
     logger: Logger,
     env: EnvironmentConfiguration,
@@ -81,7 +83,7 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
     logger.info(
       `Wallet ready — seed: ${seeds.masterSeed} · shielded coin pubkey: ${initialState.address.coinPublicKeyString()}`,
     );
-    return new MidnightWalletProvider(
+    const provider = new MidnightWalletProvider(
       logger,
       env,
       wallet,
@@ -89,6 +91,8 @@ export class MidnightWalletProvider implements MidnightProvider, WalletProvider 
       DustSecretKey.fromSeed(seeds.dust),
       keystore,
     );
+    (provider as unknown as { masterSeed: string }).masterSeed = seeds.masterSeed;
+    return provider;
   }
 
   getCoinPublicKey(): CoinPublicKey {
