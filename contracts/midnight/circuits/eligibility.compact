@@ -1,0 +1,28 @@
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// Eligibility match combines several private attributes against public
+// criteria in one proof (e.g. age >= min AND diagnosis in allowed set),
+// mirroring services/triage-agent's screening.ts AND-semantics so the same
+// eligibility logic that produced the candidate list is what the holder
+// can later prove for themselves.
+witness ageYears(): Uint<16>;
+witness diagnosisCode(): Bytes<32>;
+
+export circuit proveEligibility(
+  minAge: Uint<16>,
+  allowedDiagnoses: Vector<4, Bytes<32>>
+): Boolean {
+  const age = ageYears();
+  const diagnosis = diagnosisCode();
+
+  const ageOk = age >= minAge;
+  const diagnosisOk =
+    diagnosis == allowedDiagnoses[0] ||
+    diagnosis == allowedDiagnoses[1] ||
+    diagnosis == allowedDiagnoses[2] ||
+    diagnosis == allowedDiagnoses[3];
+
+  return disclose(ageOk && diagnosisOk);
+}

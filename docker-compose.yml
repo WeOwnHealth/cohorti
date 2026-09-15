@@ -1,0 +1,47 @@
+name: cohorti
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: cohorti
+      POSTGRES_PASSWORD: cohorti
+      POSTGRES_DB: cohorti
+    ports:
+      - "5432:5432"
+    volumes:
+      - cohorti-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cohorti"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.116.1
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./infra/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+
+  # Midnight (Compact) local proof server — see contracts/midnight/README.md.
+  midnight-proof-server:
+    image: midnightntwrk/proof-server:8.1.0
+    command: ["midnight-proof-server", "-v"]
+    ports:
+      - "6300:6300"
+
+volumes:
+  cohorti-postgres:

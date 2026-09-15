@@ -1,0 +1,25 @@
+{
+  "name": "@cohorti/deid",
+  "version": "0.0.0",
+  "private": true,
+  "description": "De-identify records locally to a named standard (HIPAA Safe Harbor or documented expert determination) before anything leaves the ingestion boundary.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "echo \"(no lint configured yet)\"",
+    "test": "echo \"(no tests yet)\""
+  },
+  "dependencies": {
+    "@cohorti/service-kit": "workspace:*",
+    "@cohorti/shared-types": "workspace:*",
+    "fastify": "^5.2.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

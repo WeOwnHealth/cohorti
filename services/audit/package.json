@@ -1,0 +1,25 @@
+{
+  "name": "@cohorti/audit",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Append-only, hash-chained audit log. Digests are anchored on-chain via contracts/evm/src/AuditAnchor.sol so tampering after the fact is detectable.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "echo \"(no lint configured yet)\"",
+    "test": "node --import tsx --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@cohorti/service-kit": "workspace:*",
+    "@cohorti/shared-types": "workspace:*",
+    "fastify": "^5.2.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

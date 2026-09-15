@@ -1,0 +1,23 @@
+# Minimal local-dev collector: accept OTLP, print to stdout. Swap the
+# `exporters` block for a real backend (Tempo/Jaeger/Honeycomb/etc.) when
+# services/audit needs to consume traces from somewhere other than logs.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      exporters: [debug]

@@ -1,0 +1,20 @@
+{
+  "name": "@cohorti/contracts-midnight",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Compact circuits for the four Cohorti claim types (threshold, range, category, eligibility match).",
+  "scripts": {
+    "compile": "bash scripts/compile-all.sh",
+    "compile:threshold": "compact compile circuits/threshold.compact managed/threshold",
+    "compile:range": "compact compile circuits/range.compact managed/range",
+    "compile:category": "compact compile circuits/category.compact managed/category",
+    "compile:eligibility": "compact compile circuits/eligibility.compact managed/eligibility",
+    "clean": "rm -rf managed"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.19.0",
+    "@midnight-ntwrk/midnight-js": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-contracts": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-protocol": "^4.1.1"
+  }
+}

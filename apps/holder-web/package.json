@@ -1,0 +1,28 @@
+{
+  "name": "@cohorti/holder-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Holder dashboard: credentials, consent prompts, and the sharing log — see README.md's Credential Holder user story.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port ${PORT_HOLDER_WEB:-3000}",
+    "build": "next build",
+    "start": "next start --port ${PORT_HOLDER_WEB:-3000}",
+    "clean": "rm -rf .next",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@cohorti/shared-types": "workspace:*",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.7.2"
+  }
+}

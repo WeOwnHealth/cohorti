@@ -1,13 +1,28 @@
 {
-  "name": "weownhealth-trials",
-  "version": "0.1.0",
+  "name": "cohorti",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "version": "0.0.0",
+  "description": "Project Cohorti — a verified health-credential layer",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.11 <21 || >=22"
+  },
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev:backend": "npm run dev --workspace @weownhealth/trials-backend",
-    "dev:frontend": "npm run dev --workspace @weownhealth/trials-frontend",
-    "build": "npm run build --workspaces --if-present"
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "clean:modules": "find . -name node_modules -type d -prune -exec rm -rf {} +",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
   }
 }

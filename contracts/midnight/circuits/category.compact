@@ -1,0 +1,22 @@
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// A category claim (e.g. "blood type is O-negative", "diagnosis code is in
+// this approved set") proves membership of a private value in a public,
+// enumerated set without revealing which member it is beyond that.
+witness categoryValue(): Bytes<32>;
+
+export circuit proveCategoryMatch(allowed: Vector<8, Bytes<32>>): Boolean {
+  const value = categoryValue();
+  return disclose(
+    value == allowed[0] ||
+    value == allowed[1] ||
+    value == allowed[2] ||
+    value == allowed[3] ||
+    value == allowed[4] ||
+    value == allowed[5] ||
+    value == allowed[6] ||
+    value == allowed[7]
+  );
+}
