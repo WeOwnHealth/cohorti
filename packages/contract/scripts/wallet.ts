@@ -137,18 +137,49 @@ const isFacadeStateSynced = (state: FacadeState): boolean =>
 export const syncWallet = (logger: Logger, wallet: WalletFacade, throttleTime = 2_000): Promise<FacadeState> =>
   Rx.firstValueFrom(
     wallet.state().pipe(
-      Rx.tap((state: FacadeState) => {
-        const n = (x: unknown): string => (typeof x === 'bigint' ? x.toString() : String(x ?? '-'));
-        const sp = state.shielded.state.progress as { appliedIndex?: unknown; highestRelevantWalletIndex?: unknown; isConnected?: boolean };
-        const dp = state.dust.state.progress as { appliedIndex?: unknown; highestRelevantWalletIndex?: unknown; isConnected?: boolean };
-        logger.debug(
-          `Wallet sync { shielded=${isProgressStrictlyComplete(state.shielded.state.progress)} si=${n(sp.appliedIndex)}/${n(sp.highestRelevantWalletIndex)} conn=${sp.isConnected}, unshielded=${isProgressStrictlyComplete(state.unshielded.progress)}, dust=${isProgressStrictlyComplete(state.dust.state.progress)} di=${n(dp.appliedIndex)}/${n(dp.highestRelevantWalletIndex)} conn=${dp.isConnected} }`,
-        );
-      }),
+      Rx.tap((state: FacadeState) => logSyncProgress(logger, state)),
       Rx.throttleTime(throttleTime),
       Rx.filter((state: FacadeState) => isFacadeStateSynced(state)),
     ),
   );
+
+const isDustLive = (state: FacadeState): boolean => {
+  const dp = state.dust.state.progress as { isConnected?: boolean };
+  return dp.isConnected === true;
+};
+
+/**
+ * Deploy sync gate — the fix for the fresh-wallet stall (2026-09-15, wire-verified).
+ * A fresh CLI wallet replays preprod's entire ledger before `syncWallet` passes;
+ * shielded finishes in ~7 min but dust grinds on at ~150-260 ev/s over ~1.5M
+ * events (hours). A contract deploy is public data and pays from unshielded
+ * tNIGHT + freshly minted tDUST — historical dust replay is never needed, and
+ * shielding is irrelevant to public transactions. So the deploy gate waits for:
+ *   unshielded strictly caught up (must see the funding + mint txs) +
+ *   dust subscription LIVE at tip (newly minted tDUST arrives via live events).
+ * Set SYNC_STRICT=1 to force the full strict sync instead.
+ */
+export const syncWalletDeploy = (logger: Logger, wallet: WalletFacade, throttleTime = 2_000): Promise<FacadeState> =>
+  Rx.firstValueFrom(
+    wallet.state().pipe(
+      Rx.tap((state: FacadeState) => logSyncProgress(logger, state)),
+      Rx.throttleTime(throttleTime),
+      Rx.filter((state: FacadeState) =>
+        process.env.SYNC_STRICT === '1'
+          ? isFacadeStateSynced(state)
+          : isProgressStrictlyComplete(state.unshielded.progress) && isDustLive(state),
+      ),
+    ),
+  );
+
+const logSyncProgress = (logger: Logger, state: FacadeState): void => {
+  const n = (x: unknown): string => (typeof x === 'bigint' ? x.toString() : String(x ?? '-'));
+  const sp = state.shielded.state.progress as { appliedIndex?: unknown; highestRelevantWalletIndex?: unknown; isConnected?: boolean };
+  const dp = state.dust.state.progress as { appliedIndex?: unknown; highestRelevantWalletIndex?: unknown; isConnected?: boolean };
+  logger.debug(
+    `Wallet sync { shielded=${isProgressStrictlyComplete(state.shielded.state.progress)} si=${n(sp.appliedIndex)}/${n(sp.highestRelevantWalletIndex)} conn=${sp.isConnected}, unshielded=${isProgressStrictlyComplete(state.unshielded.progress)}, dust=${isProgressStrictlyComplete(state.dust.state.progress)} di=${n(dp.appliedIndex)}/${n(dp.highestRelevantWalletIndex)} conn=${dp.isConnected} }`,
+  );
+};
 
 const getInitialShieldedState = async (wallet: WalletFacade): Promise<ShieldedWalletState> =>
   Rx.firstValueFrom(wallet.shielded.state);
@@ -171,7 +202,6 @@ export const generateDust = async (
   unshieldedState: UnshieldedWalletState,
   wallet: WalletFacade,
 ): Promise<string | undefined> => {
-  const dustState = await wallet.dust.waitForSyncedState();
   const networkId = getNetworkId();
   const unshieldedKeystore = createKeystore(getUnshieldedSeed(walletSeed), networkId);
   const utxos = unshieldedState.availableCoins.filter((coin) => !coin.meta.registeredForDustGeneration);
@@ -180,16 +210,34 @@ export const generateDust = async (
     return undefined;
   }
   logger.info(`Generating dust from ${utxos.length} unshielded UTXO(s)...`);
+  // Dust receiver address derives from the dust secret key directly — no ledger
+  // replay needed (fresh wallets must not wait for strict dust sync).
+  const dustReceiverAddress = await wallet.dust.getAddress();
   const recipe = await wallet.registerNightUtxosForDustGeneration(
     utxos,
     unshieldedKeystore.getPublicKey(),
     (payload) => unshieldedKeystore.signData(payload),
-    dustState.address,
+    dustReceiverAddress,
   );
   const transaction = await wallet.finalizeRecipe(recipe);
   const txId = await wallet.submitTransaction(transaction);
   logger.info(`Dust generation tx submitted: ${txId}`);
   return txId;
+};
+
+/** Waits for the just-minted tDUST to appear in the dust wallet (live subscription). */
+export const waitForDustCoins = async (
+  wallet: WalletFacade,
+  timeoutMs = 60_000,
+  pollMs = 2_000,
+): Promise<void> => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const state = await Rx.firstValueFrom(wallet.state());
+    if (state.dust.totalCoins.length > 0) return;
+    await new Promise((r) => setTimeout(r, pollMs));
+  }
+  throw new Error(`Timed out waiting for minted tDUST coins (${timeoutMs}ms).`);
 };
 
 /** Waits for a positive unshielded balance (optionally requesting from the faucet first). */
@@ -217,7 +265,11 @@ export const waitForUnshieldedFunds = async (
       wallet.state().pipe(
         Rx.throttleTime(2_000),
         Rx.filter(
-          (state: FacadeState) => isFacadeStateSynced(state) && (state.unshielded.balances[unshieldedToken().raw] ?? 0n) > 0n,
+          // Funds arrive as unshielded events — no need to wait for dust/shielded
+          // full replay (see syncWalletDeploy).
+          (state: FacadeState) =>
+            isProgressStrictlyComplete(state.unshielded.progress) &&
+            (state.unshielded.balances[unshieldedToken().raw] ?? 0n) > 0n,
         ),
         Rx.map((state: FacadeState) => state.unshielded),
       ),

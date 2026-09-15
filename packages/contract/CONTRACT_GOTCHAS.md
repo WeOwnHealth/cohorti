@@ -58,8 +58,16 @@ whenever a new one costs you time.
 7. **tDUST**: preprod tx fees are tDUST minted FROM unshielded tNIGHT
    (`registerNightUtxosForDustGeneration`), not from shielded funds. Deploy spends
    unshielded tNIGHT; no shielding required.
-8. **Upstream SDK gap**: `wallet-sdk-runtime` (wasm substrate client) pins
-   `subscribeRuntimeVersion`; the preprod relay returns `-32601 Method not found`
-   while `chain_subscribeNewHeads` works. CLI wallet shielded-sync therefore stalls on a
-   fresh wallet. Lace (browser, current client) sidesteps it. Track before blaming your
-   code or the sandbox.
+8. **Fresh-wallet sync stall — the real story (2026-09-15, RETRACTED my earlier
+   `subscribeRuntimeVersion` theory):** the preprod relay + indexer are healthy
+   end-to-end. `subscribeRuntimeVersion` `-32601` is just a non-existent bare
+   method — the namespaced forms (`chain_subscribeRuntimeVersion`,
+   `state_subscribeRuntimeVersion`) subscribe fine via the real @polkadot stack,
+   and "RuntimeVersion disconnected … 1000 Normal Closure" is polkadot-js noise.
+   The stall is the wallet SDK replaying ~1.5M shielded + ~1.5M dust events on a
+   fresh wallet (dust throttled to ~150-260 ev/s ⇒ hours). Fix landed in the same
+   commit: relaxed `syncWalletDeploy` gate — unshielded caught up + dust live at
+   tip, dust address derived via `wallet.dust.getAddress()` (never
+   `waitForSyncedState`), post-mint tDUST wait via `waitForDustCoins`.
+   `SYNC_STRICT=1` restores strict replay. Verified: funding-gate checkpoint in
+   ~3s on a fresh wallet (was 13+ min, no output, under strict).

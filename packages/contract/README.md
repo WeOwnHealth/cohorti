@@ -106,9 +106,18 @@ Ledger state: authorizedIssuer=<hex> · trial.active=true · circuit.credentials
 
 Then read it back with any Midnight explorer using the contract address.
 
-> ⚠️ Known upstream gap (2026-09-15): a CLI wallet's shielded-state sync aborts
-> because the preprod relay no longer serves `subscribeRuntimeVersion`
-> (`-32601 Method not found`; wire-verified — the relay otherwise streams
-> `chain_newHead` fine). Lace (browser) does not hit this — it uses its own
-> current wallet client. The script is verified through the funding gate; if
-> the sync still stalls on your run, use the Lace-in-browser deploy path.
+> ⚠️ Sync gate (2026-09-15, wire-verified): a fresh CLI wallet used to grind for
+> hours before deploying — the wallet SDK replays preprod's entire ledger
+> (~1.5M shielded + ~1.5M dust events) before a full sync completes, and dust
+> replay is backpressure-throttled to ~150-260 ev/s. **Not a server problem** (the
+> relay + indexer serve every subscription cleanly; all the "RuntimeVersion
+> disconnected" lines are normal polkadot-js unsubscribe-after-init noise).
+> Fix: `deploy:preprod` now uses a relaxed gate (`syncWalletDeploy`) — unshielded
+> caught up + dust subscription live at tip. A deploy is public data: it pays
+> from unshielded tNIGHT and freshly minted tDUST, so historical dust replay is
+> never needed. `SYNC_STRICT=1` restores the old full-sync behavior if ever wanted.
+
+> 🔒 Funding: the preprod faucet is Turnstile human-only, so the one manual step
+> is sending a few tNIGHT from a funded Lace wallet to the printed unshielded
+> address (Lace → Send → paste address). Keep your Lace recovery seed private —
+> the script accepts a dedicated deploy-wallet seed instead.

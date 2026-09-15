@@ -20,6 +20,9 @@
 //   PROOF_SERVER_URL   default https://proof-server.preprod.midnight.network
 //   GENERATE_DUST      1|0, default 1 — mint dust from unshielded tNIGHT
 //   WAIT_FUNDS         1|0, default 0 — wait for faucet funds before deploying
+//   SYNC_STRICT        1|0, default 0 — force full shielded+dust+unshielded replay
+//                      before deploy (not needed: deploy pays from unshielded +
+//                      freshly minted dust; strict sync costs hours on a fresh wallet)
 //   PRIVATE_STATE_PASSWORD  default dev-only constant (demo credential)
 //   LOG_LEVEL          pino level, default info
 //
@@ -46,7 +49,8 @@ import {
   generateDust,
   MidnightWalletProvider,
   randomBytes,
-  syncWallet,
+  syncWalletDeploy,
+  waitForDustCoins,
   waitForUnshieldedFunds,
 } from './wallet.ts';
 
@@ -86,7 +90,10 @@ const main = async (): Promise<void> => {
 
   const walletProvider = await MidnightWalletProvider.build(logger, config, seed);
   await walletProvider.start();
-  await syncWallet(logger, walletProvider.wallet);
+  // Relaxed gate (SYNC_STRICT=1 to force the full strict sync): unshielded caught
+  // up + dust live at tip — see wallet.ts syncWalletDeploy. A fresh wallet must
+  // NOT replay preprod's ~1.5M-event dust ledger to deploy.
+  await syncWalletDeploy(logger, walletProvider.wallet);
 
   const waitFunds = process.env.WAIT_FUNDS === '1';
   const unshielded = await waitForUnshieldedFunds(logger, walletProvider.wallet, config, waitFunds);
@@ -107,7 +114,9 @@ const main = async (): Promise<void> => {
     const seedForDust = seed ?? '';
     const minted = await generateDust(logger, seedForDust, unshielded, walletProvider.wallet);
     if (minted) {
-      await syncWallet(logger, walletProvider.wallet);
+      // Give the dust wallet's live subscription a moment to absorb the minted
+      // tDUST (fees are paid from it) — no full replay needed.
+      await waitForDustCoins(walletProvider.wallet);
     }
   }
 
