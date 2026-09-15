@@ -26,24 +26,6 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
 
-  evm:
-    name: Solidity (forge build + test)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: stable
-
-      - name: forge build
-        working-directory: contracts/evm
-        run: forge build
-
-      - name: forge test
-        working-directory: contracts/evm
-        run: forge test -vv
-
   midnight:
     name: Compact circuits (compile)
     runs-on: ubuntu-latest

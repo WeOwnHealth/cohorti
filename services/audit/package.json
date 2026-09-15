@@ -2,7 +2,7 @@
   "name": "@cohorti/audit",
   "version": "0.0.0",
   "private": true,
-  "description": "Append-only, hash-chained audit log. Digests are anchored on-chain via contracts/evm/src/AuditAnchor.sol so tampering after the fact is detectable.",
+  "description": "Append-only, hash-chained audit log. Digests are meant to be anchored on-chain (chain TBD) so tampering after the fact is detectable.",
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",

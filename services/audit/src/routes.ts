@@ -19,9 +19,9 @@ export function registerRoutes(app: FastifyInstance): void {
   });
 
   /**
-   * The digest a periodic job should anchor via
-   * contracts/evm/src/AuditAnchor.sol. Anchoring isn't wired up yet — see
-   * that contract's NatSpec and this service's README for the plan.
+   * The digest a periodic job should anchor on-chain once a chain is
+   * chosen. Anchoring isn't wired up yet — see this service's README for
+   * the plan and why no chain is assumed here.
    */
   app.get("/latest-digest", async (_req, reply) => {
     return reply.send({ chainDigest: store.getLatestDigest() });

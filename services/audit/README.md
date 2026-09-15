@@ -1,6 +1,6 @@
 # @cohorti/audit
 
-Append-only, hash-chained event log. Every audit-worthy event (a triage `AuditTrace`, a verifier-api verification event, a disclosure-guard refusal attempt) gets appended; the chain's latest digest is meant to be periodically anchored on-chain via `contracts/evm/src/AuditAnchor.sol`, so tampering with historical entries becomes detectable — recompute the chain, compare to the anchored digest.
+Append-only, hash-chained event log. Every audit-worthy event (a triage `AuditTrace`, a verifier-api verification event, a disclosure-guard refusal attempt) gets appended; the chain's latest digest is meant to be periodically anchored on-chain — no chain is chosen yet (see Status below) — so tampering with historical entries becomes detectable — recompute the chain, compare to the anchored digest.
 
 **Maps to:** `Audit store` (D5) and its `Audit-trace digest anchor` (on-chain) in the [Component diagram](../../README.md#1-component--trust-boundary-diagram-uml).
 
@@ -24,5 +24,5 @@ pnpm --filter @cohorti/audit test
 
 ## Status / TODOs
 
-- **On-chain anchoring isn't wired up.** `contracts/evm/src/AuditAnchor.sol` exists and compiles; nothing yet calls it from here. That's the next real piece of work for this service.
+- **On-chain anchoring isn't wired up, and no longer has a chain to target.** An earlier EVM implementation (`contracts/evm/AuditAnchor.sol`, Foundry, 8/8 tests) was removed to avoid committing to an EVM chain ahead of a team decision — same reasoning as the agent-identity rollback (see `packages/shared-types/src/agent.ts`). Whoever picks this back up should decide the chain first (Midnight-native anchoring is worth considering, given the rest of the proof layer lives there) rather than assuming EVM again; `git log -- contracts/evm` has the removed implementation as a reference if useful.
 - **Storage is in-memory** — replace with an append-only table before this leaves local dev (see `src/store.ts`).

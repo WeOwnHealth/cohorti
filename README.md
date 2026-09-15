@@ -745,11 +745,11 @@ packages/
   service-kit/     shared Fastify bootstrap (logging, health checks)
 
 contracts/
-  midnight/    THE proof layer — Compact circuits for the four claim types, compiled against the real toolchain
-  evm/         small & separate: audit-digest anchoring only (Foundry, 8/8 tests). Carries none of the
-               ZK proof logic, which is 100% Midnight. Agent-identity (ERC-7857 per README.md's spec)
-               is deliberately NOT scaffolded here yet — deferred pending team agreement on the
-               implementation. See contracts/evm/README.md's first two paragraphs.
+  midnight/    THE proof layer, and now the only chain in this repo — Compact circuits for the
+               four claim types, compiled against the real toolchain. An earlier contracts/evm/
+               package (agent identity, audit-digest anchoring) was removed entirely to avoid
+               assuming an EVM chain ahead of a team decision on either mechanism — see
+               services/audit/README.md and packages/shared-types/src/agent.ts.
 
 infra/         docker-compose services (Postgres, Redis, OTel collector, Midnight proof server)
 ```
@@ -768,20 +768,16 @@ pnpm test
 pnpm dev          # starts every app/service in parallel via Turborepo
 ```
 
-Contracts are separate toolchains, not part of `pnpm dev`:
+Contracts are a separate toolchain, not part of `pnpm dev`:
 
 ```bash
 # Midnight (Compact) — see contracts/midnight/README.md for install
 pnpm --filter @cohorti/contracts-midnight compile
-
-# EVM (Solidity/Foundry) — see contracts/evm/README.md for install
-pnpm --filter @cohorti/contracts-evm build
-pnpm --filter @cohorti/contracts-evm test
 ```
 
 ### What's real versus scaffolded
 
-This is a first-pass scaffold, not a finished system. Concretely real and tested: `disclosure-guard`'s policy engine (the tier-floor/anti-laddering/budget logic), `triage-agent`'s screening + human-review gate, `audit`'s hash chain, all four Compact circuits (compiled), and `AuditAnchor.sol` (compiled + 8 tests passing). Concretely stubbed, with `TODO(cohorti)` markers at each spot: the Midnight prover isn't wired into `verifier-api`, credential signing isn't implemented in `issuance`, and every datastore is in-memory pending a real Postgres/Redis integration. **Deliberately not scaffolded at all:** the agent-identity/verification mechanism (ERC-7857 per spec, or otherwise) — `AuditTrace.agentIdentity` is a plain, unverified string pending a team decision on how to implement it; see `contracts/evm/README.md`. Each service's own `README.md` says which category it's in — read that before assuming a route does more than it does.
+This is a first-pass scaffold, not a finished system. Concretely real and tested: `disclosure-guard`'s policy engine (the tier-floor/anti-laddering/budget logic), `triage-agent`'s screening + human-review gate, `audit`'s hash chain, and all four Compact circuits (compiled). Concretely stubbed, with `TODO(cohorti)` markers at each spot: the Midnight prover isn't wired into `verifier-api`, credential signing isn't implemented in `issuance`, and every datastore is in-memory pending a real Postgres/Redis integration. **Deliberately not scaffolded at all:** the agent-identity/verification mechanism (ERC-7857 per spec, or otherwise) — `AuditTrace.agentIdentity` is a plain, unverified string — and the on-chain audit-digest anchor. Both had EVM (Solidity/Foundry) implementations at one point; both were removed rather than leaving the codebase committed to a chain nobody had actually agreed to. See `packages/shared-types/src/agent.ts` and `services/audit/README.md` for the reasoning and how to pick either back up. Each service's own `README.md` says which category it's in — read that before assuming a route does more than it does.
 
 ## Roadmap (Midnight Network Buildathon)
 
@@ -809,7 +805,7 @@ The unified codebase now in this repo exceeds that scope on every point: **four*
 - Real lab/wearable integrations (Function, Quest, Whoop, Oura)
 - SigNoz + OpenTelemetry observability
 
-> **Note on ERC-7857:** agent-identity implementation was deliberately rolled back from `contracts/evm` pending team agreement on the approach (see that package's README) — Wave 3's ERC-7857 item is the natural place to pick that decision back up, once the team has actually agreed on it rather than it being assumed by scaffolding.
+> **Note on ERC-7857:** agent-identity implementation was deliberately rolled back, and the EVM chain it lived on (`contracts/evm`) has since been removed entirely — see `packages/shared-types/src/agent.ts`. Wave 3's ERC-7857 item is the natural place to pick that decision back up, once the team has actually agreed on an approach (ERC-7857 on a new EVM chain, a Midnight-native scheme, or otherwise) rather than it being assumed by scaffolding.
 
 ### Team
 

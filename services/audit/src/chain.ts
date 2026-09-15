@@ -2,8 +2,8 @@
  * Tamper-evident hash chain: entry N's digest commits to entry N's content
  * AND entry N-1's digest, so altering any historical entry changes every
  * digest after it. This is what "digest anchored on-chain" in README.md
- * actually protects — periodically anchoring the *latest* digest
- * (contracts/evm/src/AuditAnchor.sol) means anyone can later prove the
+ * actually protects — periodically anchoring the *latest* digest on-chain
+ * (chain TBD, see this service's README) means anyone can later prove the
  * off-chain log wasn't rewritten, by recomputing the chain and comparing
  * to the anchored value.
  *
