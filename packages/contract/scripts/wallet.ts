@@ -196,6 +196,54 @@ export const getUnshieldedSeed = (seed: string): Uint8Array => {
   return derivationResult.key;
 };
 
+/**
+ * Reverses dust-generation registration on UTXOs a previous run already
+ * registered (e.g. a prior run's mint landed on-chain). A fresh CLI wallet
+ * cannot see tDUST minted in an earlier process (dust replay is hours-long), so
+ * the deploy lane re-mints in-process: deregister here, then generateDust mints
+ * again and the minted coins arrive via the wallet's LIVE dust subscription.
+ */
+export const deregisterDust = async (
+  logger: Logger,
+  walletSeed: string,
+  unshieldedState: UnshieldedWalletState,
+  wallet: WalletFacade,
+): Promise<string | undefined> => {
+  const networkId = getNetworkId();
+  const unshieldedKeystore = createKeystore(getUnshieldedSeed(walletSeed), networkId);
+  const utxos = unshieldedState.availableCoins.filter((coin) => coin.meta.registeredForDustGeneration);
+  if (utxos.length === 0) {
+    logger.info('No UTXOs registered for dust generation — nothing to deregister.');
+    return undefined;
+  }
+  logger.info(`Deregistering ${utxos.length} UTXO(s) from dust generation...`);
+  const recipe = await wallet.deregisterFromDustGeneration(
+    utxos,
+    unshieldedKeystore.getPublicKey(),
+    (payload) => unshieldedKeystore.signData(payload),
+  );
+  const transaction = await wallet.finalizeRecipe(recipe);
+  const txId = await wallet.submitTransaction(transaction);
+  logger.info(`Deregistration tx submitted: ${txId}`);
+  return txId;
+};
+
+/** Waits until at least one available UTXO is NOT registered for dust generation. */
+export const waitForUnregisteredUtxo = async (
+  logger: Logger,
+  wallet: WalletFacade,
+  timeoutMs = 120_000,
+  pollMs = 2_000,
+): Promise<void> => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const st = await Rx.firstValueFrom(wallet.unshielded.state);
+    if (st.availableCoins.some((coin) => !coin.meta.registeredForDustGeneration)) return;
+    await new Promise((r) => setTimeout(r, pollMs));
+  }
+  throw new Error('Timed out waiting for an unregistered tNIGHT UTXO after deregistration.');
+};
+
 export const generateDust = async (
   logger: Logger,
   walletSeed: string,

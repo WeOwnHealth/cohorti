@@ -28,15 +28,17 @@
 //
 // Run:  yarn deploy:preprod   (or: node --experimental-strip-types scripts/preprod-deploy.ts)
 
-import { deployContract } from '@midnight-ntwrk/midnight-js-contracts';
+import { createUnprovenDeployTx, submitTxAsync } from '@midnight-ntwrk/midnight-js-contracts';
 import { httpClientProofProvider } from '@midnight-ntwrk/midnight-js-http-client-proof-provider';
 import { indexerPublicDataProvider } from '@midnight-ntwrk/midnight-js-indexer-public-data-provider';
 import { levelPrivateStateProvider } from '@midnight-ntwrk/midnight-js-level-private-state-provider';
 import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 import { NodeZkConfigProvider } from '@midnight-ntwrk/midnight-js-node-zk-config-provider';
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
+import { sampleSigningKey } from '@midnight-ntwrk/midnight-js-protocol/compact-runtime';
 import type { MidnightProviders } from '@midnight-ntwrk/midnight-js-types';
 import { unshieldedToken } from '@midnight-ntwrk/midnight-js-protocol/ledger';
+import * as Rx from 'rxjs';
 import { assertIsContractAddress, toHex } from '@midnight-ntwrk/midnight-js-utils';
 import type { EnvironmentConfiguration } from '@midnight-ntwrk/testkit-js';
 
@@ -46,17 +48,26 @@ import * as Witnesses from '../src/witnesses.ts';
 
 import { createLogger } from './logger.ts';
 import {
+  deregisterDust,
   generateDust,
   MidnightWalletProvider,
   randomBytes,
   syncWalletDeploy,
   waitForDustCoins,
+  waitForUnregisteredUtxo,
   waitForUnshieldedFunds,
 } from './wallet.ts';
+import { submitRaw } from './raw-submission.ts';
+import { type WalletFacade } from '@midnight-ntwrk/wallet-sdk-facade';
 
 // globalThis.WebSocket: graphql-ws transport needed by the indexer provider in Node.
 import { WebSocket } from 'ws';
 (globalThis as { WebSocket?: unknown }).WebSocket = WebSocket;
+// Raw JSON-RPC frame logger (diagnostics): set before the wallet connects.
+import { appendFileSync } from 'node:fs';
+(globalThis as { __wslog?: unknown }).__wslog = (line: string) => {
+  try { appendFileSync('/tmp/wsrpc.log', line + '\n'); } catch {}
+};
 
 const PREPROD_ENV_BASE = {
   walletNetworkId: 'preprod',
@@ -64,7 +75,8 @@ const PREPROD_ENV_BASE = {
   indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
   indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
   node: 'https://rpc.preprod.midnight.network',
-  nodeWS: 'wss://rpc.preprod.midnight.network',
+  nodeWS:
+    process.env.NODE_WS_URL ?? 'wss://rpc.preprod.midnight.network',
   faucet: 'https://midnight-tmnight-preprod.nethermind.dev/',
 } as const;
 
@@ -90,6 +102,13 @@ const main = async (): Promise<void> => {
 
   const walletProvider = await MidnightWalletProvider.build(logger, config, seed);
   await walletProvider.start();
+  // Raw submission wiring (see raw-submission.ts): preprod's node closes the WS
+  // on polkadot-js's watch-submit path, so every facade submission is routed to
+  // a bare one-shot `author_submitExtrinsic` instead.
+  const facadeWallet = walletProvider.wallet as WalletFacade & { submitTransaction: (tx: unknown) => Promise<string> };
+  const nodeWsUrl = config.nodeWS;
+  const rawSubmitWrapper = async (tx: unknown): Promise<string> => submitRaw(tx as Parameters<typeof submitRaw>[0], nodeWsUrl);
+  facadeWallet.submitTransaction = rawSubmitWrapper;
   // Relaxed gate (SYNC_STRICT=1 to force the full strict sync): unshielded caught
   // up + dust live at tip — see wallet.ts syncWalletDeploy. A fresh wallet must
   // NOT replay preprod's ~1.5M-event dust ledger to deploy.
@@ -112,7 +131,14 @@ const main = async (): Promise<void> => {
 
   if (process.env.GENERATE_DUST !== '0') {
     const seedForDust = seed ?? '';
-    const minted = await generateDust(logger, seedForDust, unshielded, walletProvider.wallet);
+    // A prior run's mint may already be on-chain (UTXOs registered for dust
+    // generation). A fresh CLI wallet sees no tDUST from earlier processes, so
+    // deregister first, then mint in-process so the fee coins arrive via the
+    // wallet's live dust subscription.
+    await deregisterDust(logger, seedForDust, unshielded, walletProvider.wallet);
+    await waitForUnregisteredUtxo(logger, walletProvider.wallet);
+    const freshState = await Rx.firstValueFrom(walletProvider.wallet.unshielded.state);
+    const minted = await generateDust(logger, seedForDust, freshState, walletProvider.wallet);
     if (minted) {
       // Give the dust wallet's live subscription a moment to absorb the minted
       // tDUST (fees are paid from it) — no full replay needed.
@@ -155,28 +181,42 @@ const main = async (): Promise<void> => {
   };
 
   logger.info('Deploying HealthClaimGate to preprod...');
-  const deployed = await deployContract(providers, {
+  // Build the deploy tx ourselves: deployContract's internal submission watch
+  // (watchForTxData on the SDK-returned tx id) cannot resolve the hash form the
+  // relay returns for a bare submission (wire-proven mismatch 2026-09-15), so we
+  // submit async and wait for the CONTRACT to appear on the indexer instead.
+  const unproven = await createUnprovenDeployTx<HealthClaimGateContract>(providers, {
     compiledContract: compiledHealthClaimGate,
-    privateStateId,
+    signingKey: sampleSigningKey(),
     initialPrivateState: Witnesses.createHealthClaimGatePrivateState({
       patientSecretKey: randomBytes(32),
     }),
   });
-
-  const contractAddress = deployed.deployTxData.public.contractAddress;
-  logger.info(`HEALTH_CLAIM_GATE_DEPLOYED address=${contractAddress}`);
-
-  // Cross-check via the indexer that the ledger shows the contract.
+  const contractAddress = unproven.public.contractAddress;
   assertIsContractAddress(contractAddress);
-  await sleep(3_000);
-  const contractState = await providers.publicDataProvider.queryContractState(contractAddress);
+  logger.info(`Deploy tx prepared, contract address = ${contractAddress}`);
+  const txId = await submitTxAsync(providers, { unprovenTx: unproven.private.unprovenTx });
+  logger.info(`Deploy tx submitted: ${txId}`);
+
+  // Inclusion wait on the contract itself (the deploy tx's own success signal).
+  const deadline = Date.now() + 240_000;
+  let contractState = null;
+  while (Date.now() < deadline && contractState === null) {
+    await sleep(5_000);
+    contractState = await providers.publicDataProvider.queryContractState(contractAddress);
+  }
   if (contractState === null) {
-    logger.warn('Deploy tx confirmed, but indexer has not indexed the contract yet — check again in ~10s.');
+    logger.warn('Deploy tx submitted, but the indexer has not shown the contract yet — check again in ~10s.');
   } else {
     const l: Ledger = ledger(contractState.data);
     logger.info(
       `Ledger state: authorizedIssuer=${toHex(l.authorizedIssuer)} · trial.active=${l.trial.active} · circuit.credentials=${l.credentials.size()}`,
     );
+    // Mirror submitDeployTx's post-submit private-state bookkeeping.
+    providers.privateStateProvider.setContractAddress(contractAddress);
+    await providers.privateStateProvider.set(privateStateId, unproven.private.initialPrivateState);
+    await providers.privateStateProvider.setSigningKey(contractAddress, unproven.private.signingKey);
+    logger.info(`HEALTH_CLAIM_GATE_DEPLOYED address=${contractAddress}`);
   }
 
   await walletProvider.stop();
@@ -184,6 +224,15 @@ const main = async (): Promise<void> => {
 };
 
 main().catch(async (e) => {
-  console.error('preprod-deploy failed:', (e as { message?: string }).message ?? String(e));
+  let err: unknown = e;
+  let depth = 0;
+  while (err && depth < 6) {
+    const msg = (err as { message?: string }).message ?? String(err);
+    console.error(`deploy failed (depth ${depth}): ${msg}`);
+    const cause = (err as { cause?: unknown }).cause;
+    if (cause === undefined || cause === err) break;
+    err = cause;
+    depth++;
+  }
   process.exit(1);
 });
