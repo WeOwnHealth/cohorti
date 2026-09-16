@@ -1,0 +1,13 @@
+# Local reverse proxy for the buildathon stack.
+# /api/* → backend container. Everything else → prebuilt static frontend.
+
+:80 {
+    handle /api/* {
+        reverse_proxy app:3000
+    }
+    handle {
+        root * /srv
+        file_server
+        try_files {path} {path}.html /index.html
+    }
+}
