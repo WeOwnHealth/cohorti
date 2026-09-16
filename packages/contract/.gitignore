@@ -1,0 +1,12 @@
+# deps / build output
+node_modules
+dist
+coverage
+*.tgz
+.env
+.env.*
+.DS_Store
+health-claim-gate-private-state*
+# machine state / local test logs (keep committed surface clean)
+.yarn/install-state.gz
+logs/

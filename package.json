@@ -24,5 +24,12 @@
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
     "typescript": "^5.7.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@midnight-ntwrk/ledger-v8": "8.1.0",
+      "@midnight-ntwrk/wallet-sdk": "1.2.0",
+      "@midnight-ntwrk/compact-js": "2.5.1"
+    }
   }
 }

@@ -1,0 +1,113 @@
+# WeOwnHealth Trials — Buildathon Wave 1, one-command local stack.
+#
+# Full Midnight standalone chain (node + indexer + proof-server) + backend
+# (Node/Express + real Midnight wallet + SQLite) + Caddy serving the prebuilt
+# static frontend. All on one bridge network so containers resolve each other
+# by service name.
+#
+# Prereqs before `docker compose up`:
+#   1. yarn install                              (at repo root)
+#   2. yarn workspace @weownhealth/trials-frontend build
+#      → generates packages/frontend/out/ (static export) which this stack mounts
+#
+# Then from this directory:
+#   docker compose up -d
+#   open http://localhost
+
+services:
+  midnight-node:
+    image: midnightntwrk/midnight-node:0.22.3
+    container_name: trials-midnight-node
+    restart: unless-stopped
+    environment:
+      CFG_PRESET: dev
+      SIDECHAIN_BLOCK_BENEFICIARY: '04bcf7ad3be7a5c790460be82a713af570f22e0f801f6659ab8e84a52be6969e'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9944/health']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - trialsnet
+
+  midnight-proof-server:
+    image: midnightntwrk/proof-server:8.0.3
+    container_name: trials-midnight-proof
+    restart: unless-stopped
+    command: ['midnight-proof-server', '-v']
+    environment:
+      RUST_BACKTRACE: full
+    healthcheck:
+      disable: true
+    networks:
+      - trialsnet
+
+  midnight-indexer:
+    image: midnightntwrk/indexer-standalone:4.0.0
+    container_name: trials-midnight-indexer
+    restart: unless-stopped
+    environment:
+      APP__APPLICATION__NETWORK_ID: undeployed
+      APP__INFRA__NODE__URL: 'ws://midnight-node:9944'
+      APP__INFRA__STORAGE__CNN_URL: 'sqlite::memory:'
+      APP__INFRA__SECRET: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+      RUST_LOG: 'indexer=info,chain_indexer=info,indexer_api=info,wallet_indexer=info,indexer_common=info,info'
+    depends_on:
+      midnight-node:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'cat /var/run/indexer-standalone/running 2>/dev/null || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    networks:
+      - trialsnet
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    container_name: trials-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      MIDNIGHT_INDEXER_HTTP: 'http://midnight-indexer:8088/api/v3/graphql'
+      MIDNIGHT_INDEXER_WS: 'ws://midnight-indexer:8088/api/v3/graphql/ws'
+      MIDNIGHT_NODE_HTTP: 'http://midnight-node:9944'
+      MIDNIGHT_PROOF_SERVER: 'http://midnight-proof-server:6300'
+    depends_on:
+      midnight-node:
+        condition: service_healthy
+      midnight-indexer:
+        condition: service_healthy
+    volumes:
+      - occ_data:/monorepo/packages/backend/data
+    networks:
+      - trialsnet
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: trials-caddy
+    restart: unless-stopped
+    ports:
+      - '80:80'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../packages/frontend/out:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - trialsnet
+
+volumes:
+  caddy_data:
+  caddy_config:
+  occ_data:
+
+networks:
+  trialsnet:

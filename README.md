@@ -781,35 +781,48 @@ This is a first-pass scaffold, not a finished system. Concretely real and tested
 
 ## Roadmap (Midnight Network Buildathon)
 
-This repository is WeOwnHealth's submission to the **Midnight Network Buildathon (Sep 2026)**. The wave plan below is carried over from the original buildathon submission and is the forward plan for this repo, now built on the Cohorti-standard codebase described throughout this README rather than the earlier Wave 1 scaffold.
+This repository is WeOwnHealth's submission to the **Midnight Network Buildathon (Sep 2026)**. The wave plan below is carried over from the original buildathon submission and is the forward plan for this repo.
 
-### Wave 1 — done, and exceeded
+### Wave 1 — shipped, live, and proven end-to-end
 
-The original Wave 1 scope was: a 2-circuit Compact contract (issue + prove), a single hardcoded trial ("cholesterol at or below 200 mg/dL"), mock lab data, a wallet-pull delivery pattern, and a demo frontend with a patient/sponsor role switcher.
+**Correction to an earlier claim in this document.** A previous version of this section said Wave 1 was "done, and exceeded" based on the Cohorti-standard scaffold described throughout this README — four Compact circuits, ten backend services, two working apps. That was true of *breadth* and false of *depth*: those circuits were compiled but never proved (no `zkir` in that environment, so no real proving keys), nothing was deployed to an actual Midnight network, and there was no live, working end-to-end demo. Real Wave 1 completion happened on a separate line of work — `packages/contract`, `packages/backend`, `packages/frontend` — and it is the one that's actually true:
 
-The unified codebase now in this repo exceeds that scope on every point: **four** Compact circuits (not two — threshold, range, category, and eligibility match, covering all four claim types in the spec), a full backend of ten services mapped 1:1 to the architecture's [Data Flow Diagram](#7-data-flow-diagram-dfd--level-1), real (not mocked) disclosure-budget/tier-floor/anti-laddering logic with its own test suite, and two working Next.js apps — one of which (`coordinator-console`) already implements the GDPR Art. 22 human-review gate end-to-end.
+- **Live demo:** [trials.weown.health](https://trials.weown.health) — patient wallet + issuance + proof at [/patient](https://trials.weown.health/patient), the sponsor verifier console at [/sponsor](https://trials.weown.health/sponsor), and the live contract address at [/api/health](https://trials.weown.health/api/health) (rotates on chain redeploy — always check that endpoint for the canonical value).
+- **Real Compact circuits, real proofs:** `HealthClaimGate` — `issueCredential` + `proveClaim`, Compact 0.23 compiled with `compactc 0.31.1`, real Poseidon commitments, deployed to a Midnight standalone network. 13/13 tests passing, including adversarial paths (wrong marker, wrong salt, wrong verifier, wrong scope, expired/not-yet-active consent, nonce replay).
+- **A real backend and frontend wired to it:** an Express OCC backend running an actual Midnight wallet (`WalletFacade`-direct pattern — `FluentWalletBuilder` hits a `DustParameters` bug on standalone networks, documented in `packages/backend/src/midnight.ts`), and a Next.js patient + sponsor UI, with SQLite-backed verification history.
+- **One-command deploy:** `deploy/compose.yaml` — the exact stack the live site runs, three Midnight containers + backend + Caddy on one bridge network.
+
+Full setup instructions, project layout, and the "how to evaluate" walkthrough live in `packages/contract/README.md` — this document stays the product spec and architecture reference; that one is the concrete, run-it-yourself guide for what's actually deployed.
+
+The Cohorti-standard scaffold (`apps/`, `services/`, `packages/design-system`, `contracts/midnight`) remains real and tested on its own terms — see [Getting Started](#getting-started) and [What's real versus scaffolded](#whats-real-versus-scaffolded) — but it's the broader architecture reference, not the Wave 1 submission. The two lines of work have not yet been reconciled into one codebase; that's tracked as open work, not resolved by this README.
 
 ### Wave 2 (Sep 27 – Oct 17)
 
 - Credential revocation circuits
 - Split backend into Attestation Service + separate OCC (Off-Chain Coordinator)
+- Lace-connector wallet integration (replacing the backend-hosted wallet in the Wave 1 demo with a patient-held one)
+- W3C VC signature verification in-circuit
+- `registerIssuer` circuit — multi-issuer registry replacing the demo's hardcoded issuer
 - WebSocket push notifications
 - FHIR standardization pipeline
 - ClinicalTrials.gov API integration
 - Additional verifier UIs (insurance, employer, etc.)
+- Public preprod deployment
 
 ### Wave 3 (Oct 27 – Nov 16)
 
 - AI Triage Agent + ERC-7857 verifiable identity
+- Attestation oracle integration (data sources sign directly)
 - PII redaction (local LLM)
 - Real lab/wearable integrations (Function, Quest, Whoop, Oura)
-- SigNoz + OpenTelemetry observability
+- Multi-marker trials, cross-trial credential reuse
+- Full observability (SigNoz / OpenTelemetry)
 
-> **Note on ERC-7857:** agent-identity implementation was deliberately rolled back, and the EVM chain it lived on (`contracts/evm`) has since been removed entirely — see `packages/shared-types/src/agent.ts`. Wave 3's ERC-7857 item is the natural place to pick that decision back up, once the team has actually agreed on an approach (ERC-7857 on a new EVM chain, a Midnight-native scheme, or otherwise) rather than it being assumed by scaffolding.
+> **Note on ERC-7857:** both lines of work independently arrived at ERC-7857 for agent identity and neither has built it — the Cohorti-standard scaffold's attempt was deliberately rolled back (the EVM chain it lived on, `contracts/evm`, has been removed entirely; see `packages/shared-types/src/agent.ts`), and the Wave 1 submission lists it as Wave 3 scope, not yet started. Wave 3 is the natural place to pick this up once the team has actually agreed on an approach, on whichever codebase this repository has converged on by then.
 
 ### Team
 
-Built by WeOwnHealth for the Midnight Network Buildathon (Sep 2026).
+Built by WeOwnHealth for the Midnight Network Buildathon (Sep 2026). 🤝 Let's collab — grab a time slot on [Yonks' calendar](https://cal.com/yonks/health).
 
 ---
 
