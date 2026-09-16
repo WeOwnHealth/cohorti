@@ -22,10 +22,10 @@ export default function Nav() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-3.5">
         <Link href="/" className="flex items-center gap-2">
           <span className="grid h-7 w-7 place-items-center rounded-md bg-midnight-accent/15 font-mono text-base leading-none text-midnight-accent">
-            {"</>"}
+            {"🛡"}
           </span>
           <span className="text-lg font-semibold tracking-tight">
-            <span className="text-midnight-accent">WeOwn</span>Health
+            <span className="text-midnight-accent">Health</span> Passport
           </span>
         </Link>
 
