@@ -1,4 +1,4 @@
-import { createService, startService } from "@cohorti/service-kit";
+import { createService, startService } from "@passport/service-kit";
 
 const PORT = Number(process.env.PORT_CLAIM_SCHEMA_SVC ?? 4006);
 const app = createService({ name: "claim-schema-registry", port: PORT });

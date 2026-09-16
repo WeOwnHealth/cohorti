@@ -1,4 +1,4 @@
-import { Card, CardBody, PersonIcon, ClipboardIcon, BuildingIcon } from "@cohorti/design-system/components";
+import { Card, CardBody, PersonIcon, ClipboardIcon, BuildingIcon } from "@passport/design-system/components";
 
 const personas = [
   {

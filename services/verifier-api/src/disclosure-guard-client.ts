@@ -1,4 +1,4 @@
-import type { DisclosureDecision } from "@cohorti/shared-types";
+import type { DisclosureDecision } from "@passport/shared-types";
 
 const BASE_URL = process.env.DISCLOSURE_GUARD_URL ?? "http://localhost:4007";
 

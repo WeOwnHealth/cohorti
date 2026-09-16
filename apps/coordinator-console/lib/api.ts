@@ -1,4 +1,4 @@
-import type { AuditTrace } from "@cohorti/shared-types";
+import type { AuditTrace } from "@passport/shared-types";
 
 const TRIAGE_AGENT_URL = process.env.TRIAGE_AGENT_SVC_URL ?? "http://localhost:4009";
 

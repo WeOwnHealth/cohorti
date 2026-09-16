@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import type { AuditTrace } from "@cohorti/shared-types";
-import { Badge, Button, Card, CardBody } from "@cohorti/design-system/components";
+import type { AuditTrace } from "@passport/shared-types";
+import { Badge, Button, Card, CardBody } from "@passport/design-system/components";
 import { getAuditTrace, markReviewed } from "@/lib/api";
 
 export default function ReviewTracePage() {

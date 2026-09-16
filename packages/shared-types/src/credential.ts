@@ -46,7 +46,7 @@ export function isCredentialUsable(credential: Credential, now: Date = new Date(
   return now < expiry;
 }
 
-/** Minimal ISO-8601 duration adder — supports the subset Cohorti actually emits (P<n>D, P<n>M, P<n>Y). */
+/** Minimal ISO-8601 duration adder — supports the subset Passport actually emits (P<n>D, P<n>M, P<n>Y). */
 function addIsoDuration(start: Date, duration: string): Date {
   const match = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?$/.exec(duration);
   if (!match) throw new Error(`Unsupported ISO 8601 duration: ${duration}`);

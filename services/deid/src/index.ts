@@ -1,4 +1,4 @@
-import { createService, startService } from "@cohorti/service-kit";
+import { createService, startService } from "@passport/service-kit";
 
 const PORT = Number(process.env.PORT_DEID_SVC ?? 4002);
 const app = createService({ name: "deid", port: PORT });

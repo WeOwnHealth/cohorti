@@ -1,8 +1,8 @@
 {
-  "name": "cohorti",
+  "name": "passport",
   "private": true,
   "version": "0.0.0",
-  "description": "Project Cohorti — a verified health-credential layer",
+  "description": "Project Passport — a verified health-credential layer",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=20.11 <21 || >=22"

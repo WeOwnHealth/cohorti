@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
-import type { AuditTrace } from "@cohorti/shared-types";
+import type { AuditTrace } from "@passport/shared-types";
 import { evaluateCohort, type CandidateRecord, type TrialCriterion } from "./screening.js";
 import * as traceStore from "./trace-store.js";
 
@@ -39,7 +39,7 @@ export function registerRoutes(app: FastifyInstance): void {
       agentIdentity,
       trialId,
       decisions,
-      // TODO(cohorti): populate with the real OpenTelemetry trace reference
+      // TODO(passport): populate with the real OpenTelemetry trace reference
       // once this service emits spans to services/audit rather than just
       // returning the decisions inline.
       otelTraceRef: "",
@@ -47,7 +47,7 @@ export function registerRoutes(app: FastifyInstance): void {
       humanReviewed: false,
     };
 
-    // TODO(cohorti): POST `trace` to services/audit here so it's durably
+    // TODO(passport): POST `trace` to services/audit here so it's durably
     // recorded even if the coordinator never opens the review UI.
     traceStore.save(trace);
 

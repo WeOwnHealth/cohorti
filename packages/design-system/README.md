@@ -1,4 +1,4 @@
-# @cohorti/design-system
+# @passport/design-system
 
 Shared design tokens and a small set of UI primitives (`Button`, `Card`, `Badge`, `Container`) used by every frontend surface: `apps/landing`, `apps/holder-web`, `apps/coordinator-console`. Ships as plain TS/TSX source — no build step; each Next.js app transpiles it directly via `transpilePackages`.
 
@@ -17,13 +17,13 @@ No dark theme, per explicit direction: `:root` only, nothing else.
 ```
 
 ```tsx
-import { Button, Card, Badge } from "@cohorti/design-system/components";
+import { Button, Card, Badge } from "@passport/design-system/components";
 ```
 
 ```ts
 // next.config.ts
 const nextConfig: NextConfig = {
-  transpilePackages: ["@cohorti/design-system"],
+  transpilePackages: ["@passport/design-system"],
 };
 ```
 

@@ -1,4 +1,4 @@
-# @cohorti/disclosure-guard
+# @passport/disclosure-guard
 
 Enforces every gate in README.md § ["6. Proof Request & Disclosure Control"](../../README.md#6-proof-request--disclosure-control-uml-activity) before a proof is ever generated: pre-declared claim set, tier floor, recency, anti-laddering, query budget, and holder consent. This is the service where "impossible by construction, not by convention" actually gets enforced.
 
@@ -11,8 +11,8 @@ Enforces every gate in README.md § ["6. Proof Request & Disclosure Control"](..
 ## Run
 
 ```bash
-pnpm --filter @cohorti/disclosure-guard dev
-pnpm --filter @cohorti/disclosure-guard test
+pnpm --filter @passport/disclosure-guard dev
+pnpm --filter @passport/disclosure-guard test
 ```
 
 `POST /evaluate` — the gate `services/verifier-api` calls before invoking the Midnight prover. `POST /sharing-log` — records an outcome (including negative results, which are disclosures in their own right).

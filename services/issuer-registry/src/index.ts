@@ -1,4 +1,4 @@
-import { createService, startService } from "@cohorti/service-kit";
+import { createService, startService } from "@passport/service-kit";
 
 const PORT = Number(process.env.PORT_ISSUER_REGISTRY_SVC ?? 4005);
 const app = createService({ name: "issuer-registry", port: PORT });

@@ -1,4 +1,4 @@
-# @cohorti/claim-schema-registry
+# @passport/claim-schema-registry
 
 Defines claim schemas (threshold / range / category / eligibility match) and each schema's required binding tier and validity period.
 
@@ -7,7 +7,7 @@ Defines claim schemas (threshold / range / category / eligibility match) and eac
 ## Run
 
 ```bash
-pnpm --filter @cohorti/claim-schema-registry dev
+pnpm --filter @passport/claim-schema-registry dev
 ```
 
 Listens on `PORT_CLAIM_SCHEMA_SVC` (default 4006). `GET /health` returns service status.

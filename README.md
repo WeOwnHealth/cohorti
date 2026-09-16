@@ -1,8 +1,8 @@
-# Project Cohorti
+# Project Passport
 
 **A verified health-credential layer.** WeOwnHealth's submission to the **Midnight Network Buildathon (Sep 2026)** — see [Roadmap](#roadmap-midnight-network-buildathon) for the wave plan.
 
-Project Cohorti converts source health data — wearable exports, lab panels, scanned reports, clinical notes, hospital EHR records — into signed, patient-held credentials, and lets the holder generate a zero-knowledge proof of one specific claim from that credential without exposing the record behind it. Verifiers integrate once and receive a trustworthy pass/fail answer, never the underlying data.
+Project Passport converts source health data — wearable exports, lab panels, scanned reports, clinical notes, hospital EHR records — into signed, patient-held credentials, and lets the holder generate a zero-knowledge proof of one specific claim from that credential without exposing the record behind it. Verifiers integrate once and receive a trustworthy pass/fail answer, never the underlying data.
 
 > **Core thesis:** the hard, defensible problem is not the zero-knowledge proof — that technology is available and increasingly commoditised. The hard problem is **issuer trust**: getting reputable labs, wearables and health systems to sign credentials, and establishing how strongly each credential is bound to a specific person. Coverage and issuer accreditation are the moat, in the same way that bank coverage — not the API — is Plaid's moat. The product plan is organised around that, not around the cryptography.
 
@@ -31,7 +31,7 @@ Project Cohorti converts source health data — wearable exports, lab panels, sc
 The product spans two flows that share an ingestion pipeline and a proof layer but differ in who initiates:
 
 - **Consumer flow** — holder-initiated. The patient collects credentials and proves claims on demand across many everyday verifiers.
-- **Clinical-trial flow (Cohorti)** — institution-initiated throughout. The site screens its own population, evidences verifiable cohort counts to a sponsor before consent, and issues credentials to patients who opt in. It adds a verifiable AI agent layer so automated triage decisions are attributable and auditable, and it feeds the consumer flow by putting credentials in patients' hands.
+- **Clinical-trial flow (Passport)** — institution-initiated throughout. The site screens its own population, evidences verifiable cohort counts to a sponsor before consent, and issues credentials to patients who opt in. It adds a verifiable AI agent layer so automated triage decisions are attributable and auditable, and it feeds the consumer flow by putting credentials in patients' hands.
 
 ## Problem Statement
 
@@ -71,7 +71,7 @@ The first draft treated consumer and clinical-trial flows as one architecture. T
 
 - Records are ingested, parsed and mapped to **FHIR R4** locally. De-identification to the chosen standard runs on an isolated node before any external routing.
 - A **triage agent** screens the population against trial criteria and produces a candidate list — a research activity, not treatment or operations.
-- **Lawful pathway:** HIPAA's "reviews preparatory to research" provision permits an institution's own workforce to review PHI to identify potentially eligible patients, but PHI may not leave the covered entity, and a non-workforce researcher (i.e. Project Cohorti) cannot use it on this basis at all without an IRB waiver plus executed agreements. So either the screening agent ships as **software the institution deploys and operates itself**, or every site becomes a waiver-and-agreement negotiation measured in months. This is a product-form decision made before engineering starts.
+- **Lawful pathway:** HIPAA's "reviews preparatory to research" provision permits an institution's own workforce to review PHI to identify potentially eligible patients, but PHI may not leave the covered entity, and a non-workforce researcher (i.e. Project Passport) cannot use it on this basis at all without an IRB waiver plus executed agreements. So either the screening agent ships as **software the institution deploys and operates itself**, or every site becomes a waiver-and-agreement negotiation measured in months. This is a product-form decision made before engineering starts.
 - The agent operates under a **verifiable identity (ERC-7857)** and emits an **immutable execution trace** covering inclusions and exclusions.
 - A **qualified human reviews** the candidate list before any patient is approached — a hard requirement, not a convenience.
 
@@ -133,7 +133,7 @@ flowchart TB
     COHORT["Cohort-evidence generator (ZK)"]
   end
 
-  subgraph SVC["Project Cohorti shared services"]
+  subgraph SVC["Project Passport shared services"]
     REG["Trusted-issuer registry<br/>accreditation + governance"]
     SCH["Claim-schema registry<br/>threshold / range / category / eligibility"]
     BUD["Disclosure-budget enforcer<br/>tier floor, query budget, anti-laddering"]
@@ -772,16 +772,16 @@ Contracts are a separate toolchain, not part of `pnpm dev`:
 
 ```bash
 # Midnight (Compact) — see contracts/midnight/README.md for install
-pnpm --filter @cohorti/contracts-midnight compile
+pnpm --filter @passport/contracts-midnight compile
 ```
 
 ### What's real versus scaffolded
 
-This is a first-pass scaffold, not a finished system. Concretely real and tested: `disclosure-guard`'s policy engine (the tier-floor/anti-laddering/budget logic), `triage-agent`'s screening + human-review gate, `audit`'s hash chain, and all four Compact circuits (compiled). Concretely stubbed, with `TODO(cohorti)` markers at each spot: the Midnight prover isn't wired into `verifier-api`, credential signing isn't implemented in `issuance`, and every datastore is in-memory pending a real Postgres/Redis integration. **Deliberately not scaffolded at all:** the agent-identity/verification mechanism (ERC-7857 per spec, or otherwise) — `AuditTrace.agentIdentity` is a plain, unverified string — and the on-chain audit-digest anchor. Both had EVM (Solidity/Foundry) implementations at one point; both were removed rather than leaving the codebase committed to a chain nobody had actually agreed to. See `packages/shared-types/src/agent.ts` and `services/audit/README.md` for the reasoning and how to pick either back up. Each service's own `README.md` says which category it's in — read that before assuming a route does more than it does.
+This is a first-pass scaffold, not a finished system. Concretely real and tested: `disclosure-guard`'s policy engine (the tier-floor/anti-laddering/budget logic), `triage-agent`'s screening + human-review gate, `audit`'s hash chain, and all four Compact circuits (compiled). Concretely stubbed, with `TODO(passport)` markers at each spot: the Midnight prover isn't wired into `verifier-api`, credential signing isn't implemented in `issuance`, and every datastore is in-memory pending a real Postgres/Redis integration. **Deliberately not scaffolded at all:** the agent-identity/verification mechanism (ERC-7857 per spec, or otherwise) — `AuditTrace.agentIdentity` is a plain, unverified string — and the on-chain audit-digest anchor. Both had EVM (Solidity/Foundry) implementations at one point; both were removed rather than leaving the codebase committed to a chain nobody had actually agreed to. See `packages/shared-types/src/agent.ts` and `services/audit/README.md` for the reasoning and how to pick either back up. Each service's own `README.md` says which category it's in — read that before assuming a route does more than it does.
 
 ## Roadmap (Midnight Network Buildathon)
 
-This repository is WeOwnHealth's submission to the **Midnight Network Buildathon (Sep 2026)**. The wave plan below is carried over from the original buildathon submission and is the forward plan for this repo, now built on the Cohorti-standard codebase described throughout this README rather than the earlier Wave 1 scaffold.
+This repository is WeOwnHealth's submission to the **Midnight Network Buildathon (Sep 2026)**. The wave plan below is carried over from the original buildathon submission and is the forward plan for this repo, now built on the Passport-standard codebase described throughout this README rather than the earlier Wave 1 scaffold.
 
 ### Wave 1 — done, and exceeded
 
@@ -813,4 +813,4 @@ Built by WeOwnHealth for the Midnight Network Buildathon (Sep 2026).
 
 ---
 
-*Working name: Project Cohorti. This README reflects the current product spec; implementation is in progress.*
+*Working name: Project Passport. This README reflects the current product spec; implementation is in progress.*

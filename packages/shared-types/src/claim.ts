@@ -1,7 +1,7 @@
 import type { BindingTier } from "./binding-tier.js";
 
 /**
- * The four claim types Cohorti proofs support — see README.md § "Proof and
+ * The four claim types Passport proofs support — see README.md § "Proof and
  * verification" and the Midnight circuits under contracts/midnight/circuits.
  */
 export type ClaimType = "THRESHOLD" | "RANGE" | "CATEGORY" | "ELIGIBILITY_MATCH";

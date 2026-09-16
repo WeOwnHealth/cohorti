@@ -1,4 +1,4 @@
-# @cohorti/fhir-mapper
+# @passport/fhir-mapper
 
 Map de-identified records to FHIR R4 resources.
 
@@ -7,7 +7,7 @@ Map de-identified records to FHIR R4 resources.
 ## Run
 
 ```bash
-pnpm --filter @cohorti/fhir-mapper dev
+pnpm --filter @passport/fhir-mapper dev
 ```
 
 Listens on `PORT_FHIR_MAPPER_SVC` (default 4003). `GET /health` returns service status.

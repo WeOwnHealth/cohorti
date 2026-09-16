@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/landing",
+  "name": "@passport/landing",
   "version": "0.0.0",
   "private": true,
   "description": "Public marketing site — problem, solution, and how the proof layer works.",
@@ -13,7 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cohorti/design-system": "workspace:*",
+    "@passport/design-system": "workspace:*",
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

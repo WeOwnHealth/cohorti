@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/issuance",
+  "name": "@passport/issuance",
   "version": "0.0.0",
   "private": true,
   "description": "Sign and issue credentials carrying issuer identity, accreditation level, observation date, and binding tier.",
@@ -14,8 +14,8 @@
     "test": "echo \"(no tests yet)\""
   },
   "dependencies": {
-    "@cohorti/service-kit": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/service-kit": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "fastify": "^5.2.0"
   },
   "devDependencies": {

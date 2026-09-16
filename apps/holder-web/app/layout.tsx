@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Container } from "@cohorti/design-system/components";
+import { Container } from "@passport/design-system/components";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,7 +10,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Cohorti — Holder",
+  title: "Passport — Holder",
   description: "Your health credentials, and what you've shared with whom.",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="border-b border-gray-200 bg-white">
           <Container className="flex h-16 items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <span className="text-[15px] font-semibold tracking-tight text-gray-900">Cohorti</span>
+              <span className="text-[15px] font-semibold tracking-tight text-gray-900">Passport</span>
               <span className="text-sm text-gray-400">holder</span>
             </div>
           </Container>

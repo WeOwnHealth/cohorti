@@ -1,6 +1,6 @@
-# @cohorti/contracts-midnight
+# @passport/contracts-midnight
 
-Compact circuits for Cohorti's four claim types — see README.md's [Proof and verification requirements](../../README.md#requirements) and the [`ClaimType` domain type](../../packages/shared-types/src/claim.ts).
+Compact circuits for Passport's four claim types — see README.md's [Proof and verification requirements](../../README.md#requirements) and the [`ClaimType` domain type](../../packages/shared-types/src/claim.ts).
 
 | Circuit | Claim type | Proves |
 |---|---|---|
@@ -32,8 +32,8 @@ Requires Docker Desktop (for the local proof server) and, per the [Midnight inst
 ## Compile
 
 ```bash
-pnpm --filter @cohorti/contracts-midnight compile          # all four, with proving keys (slower, first run)
-pnpm --filter @cohorti/contracts-midnight compile:threshold # one circuit at a time
+pnpm --filter @passport/contracts-midnight compile          # all four, with proving keys (slower, first run)
+pnpm --filter @passport/contracts-midnight compile:threshold # one circuit at a time
 ```
 
 Output lands in `managed/<circuit>/` (git-ignored — regenerate, don't commit): a TypeScript API (`contract/index.ts`) typed against `@midnight-ntwrk/compact-runtime`, plus the ZK circuit representation and proving keys.
@@ -48,7 +48,7 @@ Point `MIDNIGHT_PROOF_SERVER_URL` (see root `.env.example`) at `http://localhost
 
 ## Wiring into the backend
 
-`services/verifier-api/src/midnight-prover.ts` is where the compiled `managed/<circuit>/contract/` TypeScript API belongs — supply the witness functions (e.g. `ageYears()`, `diagnosisCode()` for the eligibility circuit) from the holder's actual credential data, resolved by `@cohorti/issuance`. That wiring is the next real piece of work here; see the `TODO(cohorti)` in that file.
+`services/verifier-api/src/midnight-prover.ts` is where the compiled `managed/<circuit>/contract/` TypeScript API belongs — supply the witness functions (e.g. `ageYears()`, `diagnosisCode()` for the eligibility circuit) from the holder's actual credential data, resolved by `@passport/issuance`. That wiring is the next real piece of work here; see the `TODO(passport)` in that file.
 
 ## Status / what's still a placeholder
 

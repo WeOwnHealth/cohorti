@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/coordinator-console",
+  "name": "@passport/coordinator-console",
   "version": "0.0.0",
   "private": true,
   "description": "Phase A human review: a qualified human reviews every inclusion and exclusion the triage agent produced before any patient is approached.",
@@ -13,8 +13,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@cohorti/design-system": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/design-system": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

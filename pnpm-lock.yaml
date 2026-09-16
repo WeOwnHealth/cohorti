@@ -10,10 +10,10 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^22.10.2
-        version: 22.20.2
+        version: 22.20.3
       prettier:
         specifier: ^3.4.2
-        version: 3.9.6
+        version: 3.9.7
       turbo:
         specifier: ^2.3.3
         version: 2.10.13
@@ -23,15 +23,15 @@ importers:
 
   apps/coordinator-console:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       next:
         specifier: ^16.3.5
-        version: 16.3.5(@types/node@22.20.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 16.3.5(@types/node@22.20.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -57,15 +57,15 @@ importers:
 
   apps/holder-web:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       next:
         specifier: ^16.3.5
-        version: 16.3.5(@types/node@22.20.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 16.3.5(@types/node@22.20.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -91,12 +91,12 @@ importers:
 
   apps/landing:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
       next:
         specifier: ^16.3.5
-        version: 16.3.5(@types/node@22.20.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        version: 16.3.5(@types/node@22.20.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react:
         specifier: ^19.3.0
         version: 19.3.0
@@ -155,7 +155,7 @@ importers:
         version: 11.3.0
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
       pino:
         specifier: ^9.6.0
         version: 9.14.0
@@ -172,15 +172,15 @@ importers:
 
   services/audit:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -191,15 +191,15 @@ importers:
 
   services/claim-schema-registry:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -210,15 +210,15 @@ importers:
 
   services/deid:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -229,15 +229,15 @@ importers:
 
   services/disclosure-guard:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -248,15 +248,15 @@ importers:
 
   services/fhir-mapper:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -267,15 +267,15 @@ importers:
 
   services/ingestion:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -286,15 +286,15 @@ importers:
 
   services/issuance:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -305,15 +305,15 @@ importers:
 
   services/issuer-registry:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -324,15 +324,15 @@ importers:
 
   services/triage-agent:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -343,15 +343,15 @@ importers:
 
   services/verifier-api:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
         specifier: ^5.2.0
-        version: 5.12.4
+        version: 5.12.5
     devDependencies:
       tsx:
         specifier: ^4.19.2
@@ -548,8 +548,8 @@ packages:
   '@fastify/merge-json-schemas@0.2.1':
     resolution: {integrity: sha512-OA3KGBCy6KtIvLf8DINC5880o5iBlDX4SxzLQS8HorJAbqluzLRn80UXU0bxZn7UOFhFgpRJDasfwn9nG4FG4A==}
 
-  '@fastify/proxy-addr@5.1.0':
-    resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
+  '@fastify/proxy-addr@5.1.1':
+    resolution: {integrity: sha512-zv07Y9GEuDsJPegZoDFd4SDWaZOW8N2pa0GSrYmKpId/tjt1Hgo3BjZBVjdVpfVrHaA+Qv5jawtS2O50J5xM9g==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -986,8 +986,8 @@ packages:
     cpu: [arm64]
     os: [win32]
 
-  '@types/node@22.20.2':
-    resolution: {integrity: sha512-xlvWf4Vs9n1PEVYwP1n4vvG07M6y8WgvJ2t0vbrWTmijsIHp1cS+uJ2kMIRdY3nHZK0nCYKrPeD171+SzF4/zw==}
+  '@types/node@22.20.3':
+    resolution: {integrity: sha512-DZmzkmwHzXrLPAXPyKNDzlIwMMUZCVacoD25ywdy5YTKGbOx/2ld+Q38Im2zJ0vBuZP5Prd3VZutKZyXwkOS8A==}
 
   '@types/object-inspect@1.13.0':
     resolution: {integrity: sha512-lwGTVESDDV+XsQ1pH4UifpJ1f7OtXzQ6QBOX2Afq2bM/T3oOt8hF6exJMjjIjtEWeAN2YAo25J7HxWh97CCz9w==}
@@ -1021,8 +1021,8 @@ packages:
   avvio@9.3.0:
     resolution: {integrity: sha512-g2tQ7LE7oOSqDfwEm3M+ZCMTJc7KiZCdJ4UwyZJb5ckTKyYu50OYmvv0mCFXPuYXoM4zkSt8zM9XQ9KCvxA74A==}
 
-  baseline-browser-mapping@2.11.23:
-    resolution: {integrity: sha512-le521dGVfxM7yRX0EikCoSz+rOK+hHzdDt/E7mG1jOJB/6WAAUuwVroLwaB7ApaUsz5Q0kFlDXLSA9MheUIfRQ==}
+  baseline-browser-mapping@2.11.24:
+    resolution: {integrity: sha512-hYrgxie335U08WqICoGqKRzV1HFXv6zdxwJE4ekCb80CM9a0SVVsN4QPwT67RraRo+9h8IATk6uxHJw7QSkdOg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1084,8 +1084,8 @@ packages:
   fastify-plugin@6.0.0:
     resolution: {integrity: sha512-fZOty7z3O7vOliF6d8bHE3wiEh1KcNnKEQensSgTk9C1DvN6nRLS++XVd86v33Hw/8u9Un8A1zDrQ8ujcQDHEg==}
 
-  fastify@5.12.4:
-    resolution: {integrity: sha512-zATD676fP6tBMsn+jQ7Q5/cO/Qo+149TXH0dUqUKel+1/hcZxwIbnflqtPa9EjlrvpY8eCZcL3M1UYrMc31Y7g==}
+  fastify@5.12.5:
+    resolution: {integrity: sha512-OB2k1dlxs5/NAABqeKV2FUHkSD2BbENsCak8yULVcymn3fHIPDVa9TI3SDnJSWYSllZmSYuZXy2gTnsT+Sut1A==}
 
   fastq@1.20.3:
     resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
@@ -1271,8 +1271,8 @@ packages:
     resolution: {integrity: sha512-RRuzqDtt5Y9h3quz5hWhK+TPnsmVs6WwSU6LkJMeY4HstUEDuYTG8UJSdawMRzmzAtV+KEoG8N3Qg2qLy5vM/A==}
     engines: {node: ^10 || ^12 || >=14}
 
-  prettier@3.9.6:
-    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+  prettier@3.9.7:
+    resolution: {integrity: sha512-T3mF5P7HFzZVLDQuCUNtJj6WK1pcpLMweMNUVwGb01bLNkH9AkKxtZvmInw8K6bnn2O3d6/5RHl6zSHiBAD0Og==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1532,7 +1532,7 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  '@fastify/proxy-addr@5.1.0':
+  '@fastify/proxy-addr@5.1.1':
     dependencies:
       '@fastify/forwarded': 3.0.2
       ipaddr.js: 2.5.0
@@ -1902,7 +1902,7 @@ snapshots:
   '@turbo/windows-arm64@2.10.13':
     optional: true
 
-  '@types/node@22.20.2':
+  '@types/node@22.20.3':
     dependencies:
       undici-types: 6.21.0
 
@@ -1936,7 +1936,7 @@ snapshots:
       '@fastify/error': 4.2.0
       fastq: 1.20.3
 
-  baseline-browser-mapping@2.11.23: {}
+  baseline-browser-mapping@2.11.24: {}
 
   caniuse-lite@1.0.30001810: {}
 
@@ -2016,12 +2016,12 @@ snapshots:
 
   fastify-plugin@6.0.0: {}
 
-  fastify@5.12.4:
+  fastify@5.12.5:
     dependencies:
       '@fastify/ajv-compiler': 4.0.6
       '@fastify/error': 4.2.0
       '@fastify/fast-json-stringify-compiler': 5.1.0
-      '@fastify/proxy-addr': 5.1.0
+      '@fastify/proxy-addr': 5.1.1
       abstract-logging: 2.0.1
       avvio: 9.3.0
       fast-json-stringify: 7.0.1
@@ -2140,11 +2140,11 @@ snapshots:
 
   nanoid@3.3.19: {}
 
-  next@16.3.5(@types/node@22.20.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
+  next@16.3.5(@types/node@22.20.3)(react-dom@19.3.0(react@19.3.0))(react@19.3.0):
     dependencies:
       '@next/env': 16.3.5
       '@swc/helpers': 0.5.23
-      baseline-browser-mapping: 2.11.23
+      baseline-browser-mapping: 2.11.24
       caniuse-lite: 1.0.30001810
       postcss: 8.5.23
       react: 19.3.0
@@ -2159,7 +2159,7 @@ snapshots:
       '@next/swc-linux-x64-musl': 16.3.5
       '@next/swc-win32-arm64-msvc': 16.3.5
       '@next/swc-win32-x64-msvc': 16.3.5
-      sharp: 0.35.4(@types/node@22.20.2)
+      sharp: 0.35.4(@types/node@22.20.3)
     transitivePeerDependencies:
       - '@babel/core'
       - '@types/node'
@@ -2226,7 +2226,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prettier@3.9.6: {}
+  prettier@3.9.7: {}
 
   process-warning@4.0.1: {}
 
@@ -2273,7 +2273,7 @@ snapshots:
 
   set-cookie-parser@2.7.2: {}
 
-  sharp@0.35.4(@types/node@22.20.2):
+  sharp@0.35.4(@types/node@22.20.3):
     dependencies:
       '@img/colour': 1.1.0
       detect-libc: 2.1.2
@@ -2304,7 +2304,7 @@ snapshots:
       '@img/sharp-win32-arm64': 0.35.4
       '@img/sharp-win32-ia32': 0.35.4
       '@img/sharp-win32-x64': 0.35.4
-      '@types/node': 22.20.2
+      '@types/node': 22.20.3
     optional: true
 
   sonic-boom@4.2.1:

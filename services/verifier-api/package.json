@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/verifier-api",
+  "name": "@passport/verifier-api",
   "version": "0.0.0",
   "private": true,
   "description": "Public API verifiers call: pass/fail + binding tier + recency, with no access to underlying data.",
@@ -14,8 +14,8 @@
     "test": "echo \"(no tests yet)\""
   },
   "dependencies": {
-    "@cohorti/service-kit": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/service-kit": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "fastify": "^5.2.0"
   },
   "devDependencies": {

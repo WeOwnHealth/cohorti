@@ -1,4 +1,4 @@
-import { CredentialIcon, ProofIcon, ArrowRightIcon } from "@cohorti/design-system/components";
+import { CredentialIcon, ProofIcon, ArrowRightIcon } from "@passport/design-system/components";
 
 /**
  * The hero's visual centerpiece — not decoration for its own sake, but a

@@ -1,8 +1,8 @@
 {
-  "name": "@cohorti/service-kit",
+  "name": "@passport/service-kit",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared Fastify server bootstrap (logging, health checks, OTel) used by every Cohorti backend service.",
+  "description": "Shared Fastify server bootstrap (logging, health checks, OTel) used by every Passport backend service.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

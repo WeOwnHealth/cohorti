@@ -1,4 +1,4 @@
-import { buttonVariants, Badge } from "@cohorti/design-system/components";
+import { buttonVariants, Badge } from "@passport/design-system/components";
 import { HeroVisual } from "./HeroVisual";
 
 export function Hero() {
@@ -36,7 +36,7 @@ export function Hero() {
             Reveal nothing else.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-gray-600">
-            Cohorti turns lab results, wearable data, and clinical records into signed credentials
+            Passport turns lab results, wearable data, and clinical records into signed credentials
             you control — then proves a single claim, like trial eligibility, with a zero-knowledge
             proof. Verifiers get a trustworthy yes or no. Never your data.
           </p>
@@ -45,7 +45,7 @@ export function Hero() {
               See how it works
             </a>
             <a
-              href="https://github.com/WeOwnHealth/trials"
+              href="https://github.com/WeOwnHealth/passport"
               target="_blank"
               rel="noreferrer"
               className={buttonVariants({ variant: "outline", size: "lg" })}

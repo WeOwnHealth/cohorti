@@ -1,4 +1,4 @@
-import { Badge, Card, CardBody, LockOpenIcon, LockHalfIcon, LockCheckIcon } from "@cohorti/design-system/components";
+import { Badge, Card, CardBody, LockOpenIcon, LockHalfIcon, LockCheckIcon } from "@passport/design-system/components";
 
 const tiers = [
   {

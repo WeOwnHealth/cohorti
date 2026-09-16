@@ -1,19 +1,19 @@
-# @cohorti/holder-web
+# @passport/holder-web
 
 The holder-facing UI: credentials dashboard, consent prompts, sharing log. Implements the **Credential holder** [user story](../../README.md#credential-holder) in the root README.
 
 ## Pages
 
-- `/` — credentials dashboard. Real: fetches `GET /credentials` from `@cohorti/issuance`.
-- `/consent/[requestId]` — the claim-request consent prompt. **Mock data** — see the `TODO(cohorti)` at the top of the page for the `@cohorti/verifier-api` endpoints it actually needs (a pending-request concept, not yet built).
+- `/` — credentials dashboard. Real: fetches `GET /credentials` from `@passport/issuance`.
+- `/consent/[requestId]` — the claim-request consent prompt. **Mock data** — see the `TODO(passport)` at the top of the page for the `@passport/verifier-api` endpoints it actually needs (a pending-request concept, not yet built).
 
 ## Run
 
 ```bash
-pnpm --filter @cohorti/holder-web dev
+pnpm --filter @passport/holder-web dev
 ```
 
-Best experienced with `@cohorti/issuance` also running (`pnpm --filter @cohorti/issuance dev`) — otherwise the dashboard shows its empty state, which itself explains how to wire it up.
+Best experienced with `@passport/issuance` also running (`pnpm --filter @passport/issuance dev`) — otherwise the dashboard shows its empty state, which itself explains how to wire it up.
 
 ## Status
 

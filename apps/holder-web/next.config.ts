@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  transpilePackages: ["@cohorti/design-system"],
+  transpilePackages: ["@passport/design-system"],
 };
 
 export default nextConfig;
