@@ -172,6 +172,9 @@ importers:
       '@midnight-ntwrk/wallet-sdk-abstractions':
         specifier: '*'
         version: 2.1.0
+      '@midnight-ntwrk/wallet-sdk-address-format':
+        specifier: ^3.1.2
+        version: 3.1.2
       '@midnight-ntwrk/wallet-sdk-dust-wallet':
         specifier: '*'
         version: 4.1.0(ws@8.21.3)
@@ -218,6 +221,9 @@ importers:
       '@types/node':
         specifier: ^22.15.21
         version: 22.20.2
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       tsx:
         specifier: ^4.23.13
         version: 4.23.13
