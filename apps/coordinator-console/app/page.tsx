@@ -1,53 +1,59 @@
 import Link from "next/link";
+import { Badge, Card, CardBody } from "@cohorti/design-system/components";
 import { listAuditTraces } from "@/lib/api";
 
 export default async function TraceListPage() {
   const traces = await listAuditTraces();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold mb-1">Candidate lists awaiting review</h1>
-        <p className="text-slate-500 text-sm">
-          No candidate is approached until a qualified human reviews every inclusion and exclusion here —
-          see README.md&apos;s non-functional requirement: &quot;No solely automated decision may determine
-          a person&apos;s access to a trial.&quot;
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
+          Candidate lists awaiting review
+        </h1>
+        <p className="mt-1 max-w-2xl text-[15px] text-gray-500">
+          No candidate is approached until a qualified human reviews every inclusion and exclusion
+          here — see README.md&apos;s non-functional requirement: &quot;No solely automated
+          decision may determine a person&apos;s access to a trial.&quot;
         </p>
       </div>
 
       {traces.length === 0 ? (
-        <div className="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-6 text-sm text-slate-500">
-          No traces yet. This calls <code>GET /audit-traces</code> on <code>@cohorti/triage-agent</code> —
-          start it with <code>pnpm --filter @cohorti/triage-agent dev</code> and{" "}
-          <code>POST /screen</code> a cohort to see it here.
-        </div>
+        <Card className="border-dashed">
+          <CardBody className="py-10 text-center text-sm text-gray-500">
+            <p>No traces yet.</p>
+            <p className="mt-2">
+              This calls <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">GET /audit-traces</code> on{" "}
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/triage-agent</code> — start it
+              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @cohorti/triage-agent dev</code>{" "}
+              and <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">POST /screen</code> a cohort to see it
+              here.
+            </p>
+          </CardBody>
+        </Card>
       ) : (
-        <ul className="divide-y divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg">
-          {traces.map((t) => (
-            <li key={t.id} className="p-4 flex items-center justify-between">
-              <div>
-                <div className="font-medium">Trial {t.trialId}</div>
-                <div className="text-sm text-slate-500">
-                  {t.decisions.length} candidates · {t.decisions.filter((d) => d.included).length} included
+        <Card>
+          <ul className="divide-y divide-gray-100">
+            {traces.map((t) => (
+              <li key={t.id} className="flex items-center justify-between px-5 py-4">
+                <div>
+                  <div className="font-medium text-gray-900">Trial {t.trialId}</div>
+                  <div className="mt-0.5 text-sm text-gray-500">
+                    {t.decisions.length} candidates · {t.decisions.filter((d) => d.included).length} included
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <span
-                  className={`text-xs px-2 py-1 rounded ${
-                    t.humanReviewed
-                      ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200"
-                      : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200"
-                  }`}
-                >
-                  {t.humanReviewed ? "reviewed" : "pending review"}
-                </span>
-                <Link href={`/review/${t.id}`} className="text-sm underline">
-                  Open
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
+                <div className="flex items-center gap-4">
+                  <Badge tone={t.humanReviewed ? "green" : "amber"}>
+                    {t.humanReviewed ? "Reviewed" : "Pending review"}
+                  </Badge>
+                  <Link href={`/review/${t.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-700">
+                    Open →
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
       )}
     </div>
   );

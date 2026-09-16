@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { Container } from "@cohorti/design-system/components";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Cohorti — Coordinator",
@@ -8,13 +16,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen">
-        <header className="border-b border-slate-200 dark:border-slate-800 px-6 py-4">
-          <span className="font-semibold">Cohorti</span>
-          <span className="text-slate-500 ml-2 text-sm">coordinator</span>
+    <html lang="en" className={inter.variable}>
+      <body className="min-h-screen bg-white text-gray-900 antialiased">
+        <header className="border-b border-gray-200 bg-white">
+          <Container className="flex h-16 items-center justify-between">
+            <div className="flex items-baseline gap-2">
+              <span className="text-[15px] font-semibold tracking-tight text-gray-900">Cohorti</span>
+              <span className="text-sm text-gray-400">coordinator</span>
+            </div>
+          </Container>
         </header>
-        <main className="px-6 py-8 max-w-3xl mx-auto">{children}</main>
+        <main>
+          <Container className="py-10">{children}</Container>
+        </main>
       </body>
     </html>
   );

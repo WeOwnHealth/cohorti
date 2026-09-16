@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cohorti/design-system": "workspace:*",
     "@cohorti/shared-types": "workspace:*",
     "next": "^16.3.5",
     "react": "^19.3.0",

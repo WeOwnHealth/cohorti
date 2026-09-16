@@ -1,20 +1,19 @@
 {
-  "name": "@cohorti/holder-web",
+  "name": "@cohorti/landing",
   "version": "0.0.0",
   "private": true,
-  "description": "Holder dashboard: credentials, consent prompts, and the sharing log — see README.md's Credential Holder user story.",
+  "description": "Public marketing site — problem, solution, and how the proof layer works.",
   "type": "module",
   "scripts": {
-    "dev": "next dev --port ${PORT_HOLDER_WEB:-3000}",
+    "dev": "next dev --port ${PORT_LANDING:-3002}",
     "build": "next build",
-    "start": "next start --port ${PORT_HOLDER_WEB:-3000}",
+    "start": "next start --port ${PORT_LANDING:-3002}",
     "clean": "rm -rf .next",
     "typecheck": "tsc --noEmit",
     "lint": "next lint"
   },
   "dependencies": {
     "@cohorti/design-system": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
     "next": "^16.3.5",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

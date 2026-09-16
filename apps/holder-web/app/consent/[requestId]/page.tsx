@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { Badge, Button, Card, CardBody } from "@cohorti/design-system/components";
 
 /**
  * The consent prompt from README.md's Credential Holder user story, step 3:
@@ -30,40 +31,44 @@ export default function ConsentPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-lg space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold mb-1">Claim request</h1>
-        <p className="text-slate-500 text-sm">Request {requestId}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Claim request</h1>
+        <p className="mt-1 text-sm text-gray-500">Request {requestId}</p>
       </div>
 
-      <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-5 space-y-4">
-        <Row label="Verifier" value={mockRequest.verifierName} />
-        <Row label="Claim" value={mockRequest.claimDescription} />
-        <Row label="Will reveal" value={mockRequest.willReveal} />
-        <Row label="Will NOT reveal" value={mockRequest.willNotReveal} emphasize />
-        <Row label="Remaining budget" value={mockRequest.remainingBudget} />
-      </div>
+      <Card>
+        <CardBody className="space-y-4 py-6">
+          <Row label="Verifier" value={mockRequest.verifierName} />
+          <Row label="Claim" value={mockRequest.claimDescription} />
+          <Row label="Will reveal" value={mockRequest.willReveal} />
+          <Row label="Will NOT reveal" value={mockRequest.willNotReveal} emphasize />
+          <div className="flex items-center justify-between gap-4 pt-1 text-sm">
+            <span className="text-gray-500">Remaining budget</span>
+            <Badge tone="blue">{mockRequest.remainingBudget}</Badge>
+          </div>
+        </CardBody>
+      </Card>
 
       {decision === "pending" ? (
         <div className="flex gap-3">
-          <button
-            onClick={() => setDecision("approved")}
-            className="px-4 py-2 rounded bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-sm font-medium"
-          >
+          <Button variant="primary" size="lg" onClick={() => setDecision("approved")}>
             Approve
-          </button>
-          <button
-            onClick={() => setDecision("declined")}
-            className="px-4 py-2 rounded border border-slate-300 dark:border-slate-700 text-sm font-medium"
-          >
+          </Button>
+          <Button variant="outline" size="lg" onClick={() => setDecision("declined")}>
             Decline
-          </button>
+          </Button>
         </div>
       ) : (
-        <p className="text-sm text-slate-500">
-          {decision === "approved" ? "Approved." : "Declined."} A proof already shared cannot be recalled —
-          blocking a verifier only affects future requests.
-        </p>
+        <Card className="bg-gray-50">
+          <CardBody className="py-4 text-sm text-gray-600">
+            <span className="font-medium text-gray-900">
+              {decision === "approved" ? "Approved." : "Declined."}
+            </span>{" "}
+            A proof already shared cannot be recalled — blocking a verifier only affects future
+            requests.
+          </CardBody>
+        </Card>
       )}
     </div>
   );
@@ -72,8 +77,10 @@ export default function ConsentPage() {
 function Row({ label, value, emphasize }: { label: string; value: string; emphasize?: boolean }) {
   return (
     <div className="flex justify-between gap-4 text-sm">
-      <span className="text-slate-500">{label}</span>
-      <span className={emphasize ? "font-medium text-right" : "text-right"}>{value}</span>
+      <span className="shrink-0 text-gray-500">{label}</span>
+      <span className={emphasize ? "text-right font-medium text-gray-900" : "text-right text-gray-700"}>
+        {value}
+      </span>
     </div>
   );
 }

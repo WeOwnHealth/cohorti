@@ -1,3 +1,5 @@
+import { Badge, Card, CardBody, CardHeader } from "@cohorti/design-system/components";
+import type { BadgeTone } from "@cohorti/design-system/components";
 import { listCredentials } from "@/lib/api";
 
 // TODO(cohorti): replace with the signed-in holder's real id once auth
@@ -5,51 +7,76 @@ import { listCredentials } from "@/lib/api";
 // versus what isn't — see apps/holder-web/README.md.
 const DEMO_HOLDER_ID = "demo-holder";
 
+const TIER_TONE: Record<string, BadgeTone> = {
+  T0_UNBOUND: "neutral",
+  T1_ACCOUNT_BOUND: "amber",
+  T2_ISSUER_BOUND: "green",
+};
+
+const TIER_LABEL: Record<string, string> = {
+  T0_UNBOUND: "T0 · Unbound",
+  T1_ACCOUNT_BOUND: "T1 · Account-bound",
+  T2_ISSUER_BOUND: "T2 · Issuer-bound",
+};
+
 export default async function DashboardPage() {
   const credentials = await listCredentials(DEMO_HOLDER_ID);
 
   return (
-    <div className="space-y-8">
-      <section>
-        <h1 className="text-2xl font-semibold mb-1">Your credentials</h1>
-        <p className="text-slate-500 text-sm mb-4">
+    <div className="space-y-10">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Your credentials</h1>
+        <p className="mt-1 text-[15px] text-gray-500">
           What was captured, which issuer stands behind it, and how strongly it&apos;s tied to you.
         </p>
+      </div>
 
-        {credentials.length === 0 ? (
-          <div className="border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-6 text-sm text-slate-500">
-            No credentials yet. This calls <code>GET /credentials</code> on{" "}
-            <code>@cohorti/issuance</code> — start it with{" "}
-            <code>pnpm --filter @cohorti/issuance dev</code> and issue one via{" "}
-            <code>POST /credentials</code> to see it here.
-          </div>
-        ) : (
-          <ul className="divide-y divide-slate-200 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-lg">
+      {credentials.length === 0 ? (
+        <Card className="border-dashed">
+          <CardBody className="py-10 text-center text-sm text-gray-500">
+            <p>No credentials yet.</p>
+            <p className="mt-2">
+              This calls <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">GET /credentials</code> on{" "}
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/issuance</code> — start it
+              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @cohorti/issuance dev</code>{" "}
+              and issue one via <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">POST /credentials</code> to
+              see it here.
+            </p>
+          </CardBody>
+        </Card>
+      ) : (
+        <Card>
+          <ul className="divide-y divide-gray-100">
             {credentials.map((c) => (
-              <li key={c.id} className="p-4 flex items-center justify-between">
+              <li key={c.id} className="flex items-center justify-between px-5 py-4">
                 <div>
-                  <div className="font-medium">{c.fhirResource.resourceType}</div>
-                  <div className="text-sm text-slate-500">
+                  <div className="font-medium text-gray-900">{c.fhirResource.resourceType}</div>
+                  <div className="mt-0.5 text-sm text-gray-500">
                     Issuer {c.issuerId} · observed {new Date(c.observationDate).toLocaleDateString()}
                   </div>
                 </div>
-                <span className="text-xs font-mono px-2 py-1 rounded bg-slate-100 dark:bg-slate-800">
-                  {c.bindingTier}
-                </span>
+                <Badge tone={TIER_TONE[c.bindingTier] ?? "neutral"}>
+                  {TIER_LABEL[c.bindingTier] ?? c.bindingTier}
+                </Badge>
               </li>
             ))}
           </ul>
-        )}
-      </section>
+        </Card>
+      )}
 
-      <section>
-        <h2 className="text-lg font-semibold mb-1">Sharing log</h2>
-        <p className="text-slate-500 text-sm">
-          TODO(cohorti): wire this to <code>@cohorti/disclosure-guard</code>&apos;s sharing-log store — it
-          exists server-side but has no read endpoint yet. Negative results belong here too; see
-          README.md § &quot;Surface negative results to the holder as disclosures in their own right.&quot;
-        </p>
-      </section>
+      <div>
+        <Card>
+          <CardHeader>
+            <h2 className="text-base font-semibold text-gray-900">Sharing log</h2>
+          </CardHeader>
+          <CardBody className="text-sm leading-relaxed text-gray-500">
+            TODO(cohorti): wire this to <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/disclosure-guard</code>
+            &apos;s sharing-log store — it exists server-side but has no read endpoint yet. Negative
+            results belong here too; see README.md &sect; &quot;Surface negative results to the holder
+            as disclosures in their own right.&quot;
+          </CardBody>
+        </Card>
+      </div>
     </div>
   );
 }
