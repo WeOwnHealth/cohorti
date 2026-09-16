@@ -17,7 +17,7 @@ import {
   type SharingLogEntry,
   isCredentialUsable,
   satisfiesTierFloor,
-} from "@cohorti/shared-types";
+} from "@passport/shared-types";
 
 export interface PolicyInput {
   credential: Credential;
@@ -72,7 +72,7 @@ export function evaluateDisclosureRequest(input: PolicyInput): DisclosureDecisio
   //    this as "every requested schema must be a member of the envelope"
   //    (checked in step 1); a richer information-theoretic composition
   //    bound is tracked as follow-up work, not silently skipped.
-  //    TODO(cohorti): replace with a real composition-leakage bound before
+  //    TODO(passport): replace with a real composition-leakage bound before
   //    this gate is relied on for anything beyond the envelope-membership
   //    check already performed in step 1.
 

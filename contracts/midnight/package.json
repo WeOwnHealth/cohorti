@@ -1,8 +1,8 @@
 {
-  "name": "@cohorti/contracts-midnight",
+  "name": "@passport/contracts-midnight",
   "version": "0.0.0",
   "private": true,
-  "description": "Compact circuits for the four Cohorti claim types (threshold, range, category, eligibility match).",
+  "description": "Compact circuits for the four Passport claim types (threshold, range, category, eligibility match).",
   "scripts": {
     "compile": "bash scripts/compile-all.sh",
     "compile:threshold": "compact compile circuits/threshold.compact managed/threshold",

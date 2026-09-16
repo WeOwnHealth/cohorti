@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { BindingTier, type ClaimSchema, type Credential } from "@cohorti/shared-types";
+import { BindingTier, type ClaimSchema, type Credential } from "@passport/shared-types";
 import { evaluateDisclosureRequest, type PolicyInput } from "./policy.js";
 
 const NOW = new Date("2026-06-01T00:00:00.000Z");

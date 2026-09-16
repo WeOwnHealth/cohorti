@@ -9,7 +9,7 @@ export interface ServiceOptions {
 }
 
 /**
- * Builds a Fastify instance with the conventions every Cohorti service
+ * Builds a Fastify instance with the conventions every Passport service
  * shares: structured logging, a `/health` endpoint, and graceful shutdown.
  * Business routes are registered by the caller after this returns.
  *
@@ -30,7 +30,7 @@ export function createService(opts: ServiceOptions): FastifyInstance {
   // through Next.js — is cross-origin by definition. Without this, any
   // "use client" page calling a service directly fails with a CORS error
   // that never surfaces as a helpful message (a plain browser network
-  // failure). Origin reflection is fine for local dev; TODO(cohorti):
+  // failure). Origin reflection is fine for local dev; TODO(passport):
   // restrict to a real allowlist before this is anything but local.
   app.register(cors, {
     origin: true,

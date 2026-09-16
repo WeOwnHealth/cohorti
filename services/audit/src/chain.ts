@@ -28,7 +28,7 @@ export interface ChainEntry {
   createdAt: string; // ISO 8601
 }
 
-export const GENESIS_DIGEST = sha256("cohorti-audit-genesis");
+export const GENESIS_DIGEST = sha256("passport-audit-genesis");
 
 export function appendEntry(previousDigest: string, index: number, content: string): ChainEntry {
   const contentDigest = sha256(content);

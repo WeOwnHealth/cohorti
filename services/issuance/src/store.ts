@@ -1,5 +1,5 @@
 /** In-memory credential store — see services/disclosure-guard/src/store.ts for the swap-before-production caveat this repeats everywhere. */
-import type { Credential } from "@cohorti/shared-types";
+import type { Credential } from "@passport/shared-types";
 
 const byHolder = new Map<string, Credential[]>();
 const byId = new Map<string, Credential>();

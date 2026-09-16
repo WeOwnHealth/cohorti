@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import type { DisclosureRequest } from "@cohorti/shared-types";
+import type { DisclosureRequest } from "@passport/shared-types";
 import { evaluateDisclosureRequest } from "./policy.js";
 import * as store from "./store.js";
 

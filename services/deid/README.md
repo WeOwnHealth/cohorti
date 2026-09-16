@@ -1,4 +1,4 @@
-# @cohorti/deid
+# @passport/deid
 
 De-identify records locally to a named standard (HIPAA Safe Harbor or documented expert determination) before anything leaves the ingestion boundary.
 
@@ -7,7 +7,7 @@ De-identify records locally to a named standard (HIPAA Safe Harbor or documented
 ## Run
 
 ```bash
-pnpm --filter @cohorti/deid dev
+pnpm --filter @passport/deid dev
 ```
 
 Listens on `PORT_DEID_SVC` (default 4002). `GET /health` returns service status.

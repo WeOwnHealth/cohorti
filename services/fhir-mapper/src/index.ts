@@ -1,4 +1,4 @@
-import { createService, startService } from "@cohorti/service-kit";
+import { createService, startService } from "@passport/service-kit";
 
 const PORT = Number(process.env.PORT_FHIR_MAPPER_SVC ?? 4003);
 const app = createService({ name: "fhir-mapper", port: PORT });

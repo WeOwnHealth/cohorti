@@ -1,4 +1,4 @@
-import { Card, CardBody, Badge, CredentialIcon, ProofIcon, ArrowRightIcon } from "@cohorti/design-system/components";
+import { Card, CardBody, Badge, CredentialIcon, ProofIcon, ArrowRightIcon } from "@passport/design-system/components";
 
 const steps = [
   {

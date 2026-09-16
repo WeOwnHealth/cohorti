@@ -12,7 +12,7 @@ import type {
   DisclosureBudget,
   DisclosureEnvelope,
   SharingLogEntry,
-} from "@cohorti/shared-types";
+} from "@passport/shared-types";
 
 type SharingLogEntryWithMarker = SharingLogEntry & { markerKey?: string };
 

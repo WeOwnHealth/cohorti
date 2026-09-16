@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Cohorti — Prove one health fact. Reveal nothing else.",
+  title: "Passport — Prove one health fact. Reveal nothing else.",
   description:
-    "Cohorti turns lab results, wearable data, and clinical records into signed, patient-held credentials — then proves a single health claim with a zero-knowledge proof, without ever exposing the record behind it.",
+    "Passport turns lab results, wearable data, and clinical records into signed, patient-held credentials — then proves a single health claim with a zero-knowledge proof, without ever exposing the record behind it.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

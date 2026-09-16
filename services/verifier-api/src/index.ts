@@ -1,4 +1,4 @@
-import { createService, startService } from "@cohorti/service-kit";
+import { createService, startService } from "@passport/service-kit";
 import { registerRoutes } from "./routes.js";
 
 const PORT = Number(process.env.PORT_VERIFIER_API_SVC ?? 4008);

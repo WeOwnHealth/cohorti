@@ -28,10 +28,10 @@ importers:
 
   apps/coordinator-console:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       next:
@@ -62,10 +62,10 @@ importers:
 
   apps/holder-web:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       next:
@@ -96,7 +96,7 @@ importers:
 
   apps/landing:
     dependencies:
-      '@cohorti/design-system':
+      '@passport/design-system':
         specifier: workspace:*
         version: link:../../packages/design-system
       next:
@@ -384,10 +384,10 @@ importers:
 
   services/audit:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -403,10 +403,10 @@ importers:
 
   services/claim-schema-registry:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -422,10 +422,10 @@ importers:
 
   services/deid:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -441,10 +441,10 @@ importers:
 
   services/disclosure-guard:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -460,10 +460,10 @@ importers:
 
   services/fhir-mapper:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -479,10 +479,10 @@ importers:
 
   services/ingestion:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -498,10 +498,10 @@ importers:
 
   services/issuance:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -517,10 +517,10 @@ importers:
 
   services/issuer-registry:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -536,10 +536,10 @@ importers:
 
   services/triage-agent:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:
@@ -555,10 +555,10 @@ importers:
 
   services/verifier-api:
     dependencies:
-      '@cohorti/service-kit':
+      '@passport/service-kit':
         specifier: workspace:*
         version: link:../../packages/service-kit
-      '@cohorti/shared-types':
+      '@passport/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types
       fastify:

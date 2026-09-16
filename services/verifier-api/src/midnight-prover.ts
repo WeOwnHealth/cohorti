@@ -10,7 +10,7 @@
  * — is what belongs behind this function. This stub keeps the *shape*
  * verifier-api depends on stable while that wiring lands.
  */
-import type { BindingTier, ClaimType, RecencyWindow } from "@cohorti/shared-types";
+import type { BindingTier, ClaimType, RecencyWindow } from "@passport/shared-types";
 
 export interface ProveRequest {
   claimType: ClaimType;
@@ -27,7 +27,7 @@ export interface ProveResult {
 }
 
 export async function generateProof(_req: ProveRequest): Promise<ProveResult> {
-  // TODO(cohorti): replace with a call into the compiled circuit's
+  // TODO(passport): replace with a call into the compiled circuit's
   // generated TS API against a running proof server. See
   // contracts/midnight/README.md and contracts/midnight/circuits/*.compact
   // for the four claim-type circuits this dispatches to.

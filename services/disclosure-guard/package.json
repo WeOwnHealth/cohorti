@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/disclosure-guard",
+  "name": "@passport/disclosure-guard",
   "version": "0.0.0",
   "private": true,
   "description": "Enforces the tier floor, recency, anti-laddering, query budget, and disclosure envelope before any proof is generated.",
@@ -14,8 +14,8 @@
     "test": "node --import tsx --test src/**/*.test.ts"
   },
   "dependencies": {
-    "@cohorti/service-kit": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/service-kit": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "fastify": "^5.2.0"
   },
   "devDependencies": {

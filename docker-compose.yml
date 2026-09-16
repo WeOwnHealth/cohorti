@@ -1,18 +1,18 @@
-name: cohorti
+name: passport
 
 services:
   postgres:
     image: postgres:17-alpine
     environment:
-      POSTGRES_USER: cohorti
-      POSTGRES_PASSWORD: cohorti
-      POSTGRES_DB: cohorti
+      POSTGRES_USER: passport
+      POSTGRES_PASSWORD: passport
+      POSTGRES_DB: passport
     ports:
       - "5432:5432"
     volumes:
-      - cohorti-postgres:/var/lib/postgresql/data
+      - passport-postgres:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U cohorti"]
+      test: ["CMD-SHELL", "pg_isready -U passport"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -44,4 +44,4 @@ services:
       - "6300:6300"
 
 volumes:
-  cohorti-postgres:
+  passport-postgres:

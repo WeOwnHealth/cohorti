@@ -1,10 +1,10 @@
 /**
- * In-memory trace store, standing in for a call to @cohorti/audit (append)
+ * In-memory trace store, standing in for a call to @passport/audit (append)
  * plus a Postgres row (for the humanReviewed flag, which needs to be
- * updatable — the hash chain in @cohorti/audit is append-only by design and
+ * updatable — the hash chain in @passport/audit is append-only by design and
  * shouldn't be mutated after the fact). See routes.ts TODOs.
  */
-import type { AuditTrace } from "@cohorti/shared-types";
+import type { AuditTrace } from "@passport/shared-types";
 
 const traces = new Map<string, AuditTrace>();
 

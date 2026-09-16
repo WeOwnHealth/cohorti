@@ -1,8 +1,8 @@
 {
-  "name": "@cohorti/shared-types",
+  "name": "@passport/shared-types",
   "version": "0.0.0",
   "private": true,
-  "description": "Domain model shared across all Cohorti services and apps — mirrors the class diagram in README.md.",
+  "description": "Domain model shared across all Passport services and apps — mirrors the class diagram in README.md.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

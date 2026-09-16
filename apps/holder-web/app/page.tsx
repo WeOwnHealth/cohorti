@@ -1,8 +1,8 @@
-import { Badge, Card, CardBody, CardHeader, CredentialIcon, ClipboardIcon } from "@cohorti/design-system/components";
-import type { BadgeTone } from "@cohorti/design-system/components";
+import { Badge, Card, CardBody, CardHeader, CredentialIcon, ClipboardIcon } from "@passport/design-system/components";
+import type { BadgeTone } from "@passport/design-system/components";
 import { listCredentials } from "@/lib/api";
 
-// TODO(cohorti): replace with the signed-in holder's real id once auth
+// TODO(passport): replace with the signed-in holder's real id once auth
 // exists. A hardcoded demo id keeps this page honest about what's wired up
 // versus what isn't — see apps/holder-web/README.md.
 const DEMO_HOLDER_ID = "demo-holder";
@@ -40,8 +40,8 @@ export default async function DashboardPage() {
             <p className="font-medium text-gray-700">No credentials yet.</p>
             <p className="mt-2">
               This calls <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">GET /credentials</code> on{" "}
-              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/issuance</code> — start it
-              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @cohorti/issuance dev</code>{" "}
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@passport/issuance</code> — start it
+              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @passport/issuance dev</code>{" "}
               and issue one via <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">POST /credentials</code> to
               see it here.
             </p>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
             <h2 className="text-base font-semibold text-gray-900">Sharing log</h2>
           </CardHeader>
           <CardBody className="text-sm leading-relaxed text-gray-500">
-            TODO(cohorti): wire this to <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/disclosure-guard</code>
+            TODO(passport): wire this to <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@passport/disclosure-guard</code>
             &apos;s sharing-log store — it exists server-side but has no read endpoint yet. Negative
             results belong here too; see README.md &sect; &quot;Surface negative results to the holder
             as disclosures in their own right.&quot;

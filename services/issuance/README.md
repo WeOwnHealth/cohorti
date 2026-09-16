@@ -1,4 +1,4 @@
-# @cohorti/issuance
+# @passport/issuance
 
 Sign and issue credentials carrying issuer identity, accreditation level, observation date, and binding tier.
 
@@ -7,7 +7,7 @@ Sign and issue credentials carrying issuer identity, accreditation level, observ
 ## Run
 
 ```bash
-pnpm --filter @cohorti/issuance dev
+pnpm --filter @passport/issuance dev
 ```
 
 Listens on `PORT_ISSUANCE_SVC` (default 4004). `GET /health` returns service status.

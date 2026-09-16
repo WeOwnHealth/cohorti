@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/deid",
+  "name": "@passport/deid",
   "version": "0.0.0",
   "private": true,
   "description": "De-identify records locally to a named standard (HIPAA Safe Harbor or documented expert determination) before anything leaves the ingestion boundary.",
@@ -14,8 +14,8 @@
     "test": "echo \"(no tests yet)\""
   },
   "dependencies": {
-    "@cohorti/service-kit": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/service-kit": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "fastify": "^5.2.0"
   },
   "devDependencies": {

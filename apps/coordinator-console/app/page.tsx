@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Badge, Card, CardBody, ClipboardIcon } from "@cohorti/design-system/components";
+import { Badge, Card, CardBody, ClipboardIcon } from "@passport/design-system/components";
 import { listAuditTraces } from "@/lib/api";
 
 export default async function TraceListPage() {
@@ -24,8 +24,8 @@ export default async function TraceListPage() {
             <p>No traces yet.</p>
             <p className="mt-2">
               This calls <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">GET /audit-traces</code> on{" "}
-              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@cohorti/triage-agent</code> — start it
-              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @cohorti/triage-agent dev</code>{" "}
+              <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">@passport/triage-agent</code> — start it
+              with <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">pnpm --filter @passport/triage-agent dev</code>{" "}
               and <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs">POST /screen</code> a cohort to see it
               here.
             </p>

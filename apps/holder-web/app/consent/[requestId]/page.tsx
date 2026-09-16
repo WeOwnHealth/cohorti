@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Badge, Button, Card, CardBody, ProofIcon } from "@cohorti/design-system/components";
+import { Badge, Button, Card, CardBody, ProofIcon } from "@passport/design-system/components";
 
 /**
  * The consent prompt from README.md's Credential Holder user story, step 3:
  * "The holder sees the exact claim being asked for, the verifier's
  * identity, and what the proof will and will not reveal, before deciding."
  *
- * TODO(cohorti): this renders against mock data. The real flow needs
- * @cohorti/verifier-api to expose a *pending*-request concept — today
+ * TODO(passport): this renders against mock data. The real flow needs
+ * @passport/verifier-api to expose a *pending*-request concept — today
  * POST /proof-requests takes `holderApproved` as an input and resolves
  * synchronously, which is a v1 simplification, not the real UX: a verifier
  * shouldn't already know the answer. Add GET /proof-requests/:id (for this

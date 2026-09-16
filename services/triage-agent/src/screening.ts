@@ -9,7 +9,7 @@
  * excluded eligible patient is invisible unless exclusions are logged," so
  * exclusions here are first-class outputs, not a filtered-out remainder.
  */
-import type { TriageDecision } from "@cohorti/shared-types";
+import type { TriageDecision } from "@passport/shared-types";
 
 export type CriterionOperator = "eq" | "neq" | "gt" | "gte" | "lt" | "lte" | "in" | "not_in";
 

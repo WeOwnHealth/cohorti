@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
-import { BindingTier } from "@cohorti/shared-types";
+import { BindingTier } from "@passport/shared-types";
 import { evaluateDisclosure, recordSharingLog } from "./disclosure-guard-client.js";
 import { generateProof } from "./midnight-prover.js";
 
@@ -30,14 +30,14 @@ export function registerRoutes(app: FastifyInstance): void {
     });
 
     if (decision.outcome === "REFUSED") {
-      // TODO(cohorti): forward refusal attempts to services/audit — the
+      // TODO(passport): forward refusal attempts to services/audit — the
       // activity diagram's "REFUSE + log attempt" branches (envelope and
       // laddering refusals in particular) expect this to be visible, not
       // just returned to the caller.
       return reply.code(403).send({ result: null, reason: decision.reason });
     }
 
-    // TODO(cohorti): resolve the credential's real binding tier from
+    // TODO(passport): resolve the credential's real binding tier from
     // services/issuance rather than hardcoding a placeholder — the request
     // body deliberately doesn't carry it, since a caller-supplied tier
     // could never be trusted. T0_UNBOUND here is a placeholder that must

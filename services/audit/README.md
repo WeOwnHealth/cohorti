@@ -1,4 +1,4 @@
-# @cohorti/audit
+# @passport/audit
 
 Append-only, hash-chained event log. Every audit-worthy event (a triage `AuditTrace`, a verifier-api verification event, a disclosure-guard refusal attempt) gets appended; the chain's latest digest is meant to be periodically anchored on-chain — no chain is chosen yet (see Status below) — so tampering with historical entries becomes detectable — recompute the chain, compare to the anchored digest.
 
@@ -13,8 +13,8 @@ This is a chain, not a Merkle tree: it proves the *whole log* hasn't been tamper
 ## Run
 
 ```bash
-pnpm --filter @cohorti/audit dev
-pnpm --filter @cohorti/audit test
+pnpm --filter @passport/audit dev
+pnpm --filter @passport/audit test
 ```
 
 - `POST /events` — append an event.

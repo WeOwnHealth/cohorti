@@ -1,4 +1,4 @@
-# @cohorti/issuer-registry
+# @passport/issuer-registry
 
 Trusted-issuer registry: admission process, accreditation levels, published governance model, revocation.
 
@@ -7,7 +7,7 @@ Trusted-issuer registry: admission process, accreditation levels, published gove
 ## Run
 
 ```bash
-pnpm --filter @cohorti/issuer-registry dev
+pnpm --filter @passport/issuer-registry dev
 ```
 
 Listens on `PORT_ISSUER_REGISTRY_SVC` (default 4005). `GET /health` returns service status.

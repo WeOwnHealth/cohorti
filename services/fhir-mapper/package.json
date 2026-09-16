@@ -1,5 +1,5 @@
 {
-  "name": "@cohorti/fhir-mapper",
+  "name": "@passport/fhir-mapper",
   "version": "0.0.0",
   "private": true,
   "description": "Map de-identified records to FHIR R4 resources.",
@@ -14,8 +14,8 @@
     "test": "echo \"(no tests yet)\""
   },
   "dependencies": {
-    "@cohorti/service-kit": "workspace:*",
-    "@cohorti/shared-types": "workspace:*",
+    "@passport/service-kit": "workspace:*",
+    "@passport/shared-types": "workspace:*",
     "fastify": "^5.2.0"
   },
   "devDependencies": {

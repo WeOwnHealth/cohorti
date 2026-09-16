@@ -1,4 +1,4 @@
-import type { Credential } from "@cohorti/shared-types";
+import type { Credential } from "@passport/shared-types";
 
 const ISSUANCE_URL = process.env.ISSUANCE_SVC_URL ?? "http://localhost:4004";
 

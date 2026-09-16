@@ -1,4 +1,4 @@
-# @cohorti/ingestion
+# @passport/ingestion
 
 Ingest raw source data (wearable API, lab portal, uploaded PDF/scan) inside the local or institutional boundary.
 
@@ -7,7 +7,7 @@ Ingest raw source data (wearable API, lab portal, uploaded PDF/scan) inside the 
 ## Run
 
 ```bash
-pnpm --filter @cohorti/ingestion dev
+pnpm --filter @passport/ingestion dev
 ```
 
 Listens on `PORT_INGESTION_SVC` (default 4001). `GET /health` returns service status.

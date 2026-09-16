@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
-import type { BindingTier, Credential, FhirRef } from "@cohorti/shared-types";
+import type { BindingTier, Credential, FhirRef } from "@passport/shared-types";
 import * as store from "./store.js";
 
 interface IssueBody {
@@ -14,7 +14,7 @@ interface IssueBody {
 
 export function registerRoutes(app: FastifyInstance): void {
   /**
-   * Signs and issues a credential. TODO(cohorti): actually sign it — this
+   * Signs and issues a credential. TODO(passport): actually sign it — this
    * stub persists the credential shape but does not yet produce or attach
    * a real signature. Do not treat `issue()`'s output as a trustworthy
    * credential until that's wired in; see README.md's requirement that a
