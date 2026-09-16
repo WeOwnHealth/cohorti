@@ -4,19 +4,27 @@ import { useEffect, useState } from "react";
 import {
   API_URL,
   getTrial,
+  getWallet,
   issueCredential,
   verifyProof,
   truncateHash,
   type Trial,
   type Credential,
   type VerifyProofResult,
+  type WalletInfo,
 } from "../../lib/api";
 
-const MOCK_PATIENT = { patientId: "patient_001", marker: "cholesterol", value: 187, unit: "mg/dL" };
+const MOCK_PATIENT = { marker: "cholesterol", value: 187, unit: "mg/dL" };
 const CONSENT_EXPIRY = new Date(Date.now() + 30 * 86400_000).toISOString().slice(0, 10);
+
+// Fresh per-session pseudonym so each browser click writes a distinct row
+// on the sponsor console. Reused across issue-credential + verify-proof so
+// judges can correlate a single patient's actions.
+const SESSION_PSEUDONYM = `patient_${Math.random().toString(16).slice(2, 8)}`;
 
 export default function PatientView() {
   const [walletConnected, setWalletConnected] = useState(false);
+  const [wallet, setWallet] = useState<WalletInfo | null>(null);
   const [credential, setCredential] = useState<Credential | null>(null);
   const [trial, setTrial] = useState<Trial | null>(null);
   const [consentGiven, setConsentGiven] = useState(false);
@@ -31,13 +39,18 @@ export default function PatientView() {
         setError(null);
       })
       .catch(() => setError(`Cannot reach OCC at ${API_URL} — is the backend running?`));
+    getWallet()
+      .then((w) => setWallet(w))
+      .catch(() => {
+        /* backend down — handled by getTrial error above */
+      });
   }, []);
 
   const canProve = walletConnected && credential !== null && consentGiven && !processing;
 
   const issueNew = async () => {
     try {
-      const res = await issueCredential(MOCK_PATIENT);
+      const res = await issueCredential({ ...MOCK_PATIENT, patientId: SESSION_PSEUDONYM });
       if (!res.success) throw new Error("backend returned success:false");
       setCredential({ ...res.credential, txHash: res.tx.hash });
       setError(null);
@@ -53,7 +66,7 @@ export default function PatientView() {
       await new Promise((r) => setTimeout(r, 1400)); // simulate ZK proof generation
       const res = await verifyProof({
         proofId: `proof_${Math.random().toString(16).slice(2, 10)}`,
-        patientPseudonym: MOCK_PATIENT.patientId,
+        patientPseudonym: SESSION_PSEUDONYM,
         eligible: true,
       });
       setResult(res);
@@ -64,6 +77,12 @@ export default function PatientView() {
       setProcessing(false);
     }
   };
+
+  // Backend wallet address (real Midnight standalone address) — shown as
+  // "connected wallet" since the backend handles all wallet ops in Wave 1.
+  const walletLabel = wallet?.walletAddress
+    ? `${truncateHash(wallet.walletAddress, 14)} · ${wallet.network}`
+    : "connecting to backend wallet…";
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
@@ -86,10 +105,8 @@ export default function PatientView() {
             <div className="mt-4 flex items-center gap-3 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3">
               <span className="text-emerald-400">✔</span>
               <div>
-                <div className="text-sm font-medium text-emerald-300">Lace wallet connected</div>
-                <div className="font-mono text-xs text-gray-400">
-                  addr1l4q7x2f9m3k8p5z*…*t8d2 (mock · midnight-testnet)
-                </div>
+                <div className="text-sm font-medium text-emerald-300">Wallet ready</div>
+                <div className="font-mono text-xs text-gray-400 break-all">{walletLabel}</div>
               </div>
             </div>
           ) : (
@@ -97,7 +114,7 @@ export default function PatientView() {
               onClick={() => setWalletConnected(true)}
               className="mt-4 w-full rounded-lg bg-midnight-accent px-4 py-3 text-sm font-semibold text-midnight-bg shadow-glow transition hover:bg-cyan-300"
             >
-              Connect Lace Wallet
+              Connect Wallet
             </button>
           )}
         </section>
@@ -124,7 +141,7 @@ export default function PatientView() {
                 </div>
                 <div className="flex justify-between">
                   <dt>tx</dt>
-                  <dd>{credential.txHash ? truncateHash(credential.txHash, 8) : "—"} · midnight-testnet</dd>
+                  <dd>{credential.txHash ? truncateHash(credential.txHash, 8) : "—"} · {wallet?.network ?? "midnight-standalone"}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt>issued</dt>
@@ -188,7 +205,7 @@ export default function PatientView() {
           </button>
           {!canProve && (
             <p className="mt-2 text-xs text-gray-500">
-              {!walletConnected && "Connect your Lace wallet · "}
+              {!walletConnected && "Connect wallet · "}
               {!credential && "Issue a credential · "}
               {!consentGiven && "Check the consent box"}
             </p>

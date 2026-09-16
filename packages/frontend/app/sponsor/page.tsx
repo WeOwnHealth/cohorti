@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { API_URL, getTrial, type Trial } from "../../lib/api";
-
-const MOCK_RESULTS = [
-  { patientPseudonym: "patient_001", eligible: true, scope: "cholesterol <= 200", verifiedAt: "2026-09-15T18:22:41Z", note: "No raw biomarker values disclosed" },
-  { patientPseudonym: "patient_002", eligible: true, scope: "cholesterol <= 200", verifiedAt: "2026-09-15T18:41:02Z", note: "No raw biomarker values disclosed" },
-  { patientPseudonym: "patient_003", eligible: false, scope: "cholesterol <= 200", verifiedAt: "2026-09-15T19:03:27Z", note: "No raw biomarker values disclosed" },
-];
+import {
+  API_URL,
+  getTrial,
+  getVerifications,
+  type Trial,
+  type Verification,
+} from "../../lib/api";
 
 export default function SponsorView() {
   const [trial, setTrial] = useState<Trial | null>(null);
+  const [results, setResults] = useState<Verification[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -20,6 +21,24 @@ export default function SponsorView() {
         setError(null);
       })
       .catch(() => setError(`Cannot reach OCC at ${API_URL} — is the backend running?`));
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = () =>
+      getVerifications()
+        .then((r) => {
+          if (!cancelled) setResults(r.verifications);
+        })
+        .catch(() => {
+          /* silently ignore — trial-load already surfaces backend errors */
+        });
+    load();
+    const id = setInterval(load, 4000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   return (
@@ -82,7 +101,7 @@ export default function SponsorView() {
               </tr>
             </thead>
             <tbody>
-              {MOCK_RESULTS.map((r, i) => (
+              {results.map((r, i) => (
                 <tr key={i} className="border-b border-midnight-surface/50">
                   <td className="px-4 py-3 font-mono text-gray-300">{r.patientPseudonym}</td>
                   <td className="px-4 py-3">

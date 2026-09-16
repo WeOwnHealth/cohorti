@@ -60,6 +60,26 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const getTrial = (): Promise<Trial> => request<Trial>("/api/trial");
 
+export interface Verification {
+  patientPseudonym: string;
+  eligible: boolean;
+  scope: string;
+  verifiedAt: string;
+  note: string;
+}
+
+export const getVerifications = (): Promise<{ verifications: Verification[] }> =>
+  request<{ verifications: Verification[] }>("/api/verifications");
+
+export interface WalletInfo {
+  network: string;
+  walletAddress: string | null;
+  contractAddress: string | null;
+}
+
+export const getWallet = (): Promise<WalletInfo> =>
+  request<WalletInfo>("/api/wallet");
+
 export const issueCredential = (body: {
   patientId: string;
   marker: string;

@@ -5,3 +5,7 @@ packages/contract/midnight-level-db/
 packages/deploy-ui/
 packages/contract/scripts/preview-deploy.ts
 packages/contract/scripts/standalone-deploy.ts
+packages/backend/data/
+packages/backend/midnight-level-db/
+packages/frontend/.next/
+packages/frontend/out/
