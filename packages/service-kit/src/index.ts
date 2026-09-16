@@ -1,4 +1,5 @@
 import Fastify, { type FastifyInstance } from "fastify";
+import cors from "@fastify/cors";
 
 export interface ServiceOptions {
   /** Short service name, e.g. "disclosure-guard" — used in logs and the /health payload. */
@@ -22,6 +23,18 @@ export function createService(opts: ServiceOptions): FastifyInstance {
       level: opts.logLevel ?? process.env.LOG_LEVEL ?? "info",
       base: { service: opts.name },
     },
+  });
+
+  // Every frontend app (holder-web, coordinator-console) runs on its own
+  // port, so a browser-side fetch straight to a service — not proxied
+  // through Next.js — is cross-origin by definition. Without this, any
+  // "use client" page calling a service directly fails with a CORS error
+  // that never surfaces as a helpful message (a plain browser network
+  // failure). Origin reflection is fine for local dev; TODO(cohorti):
+  // restrict to a real allowlist before this is anything but local.
+  app.register(cors, {
+    origin: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   });
 
   app.get("/health", async () => ({

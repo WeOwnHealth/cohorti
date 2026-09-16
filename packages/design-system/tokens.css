@@ -24,6 +24,18 @@
  * prefers-color-scheme or [data-theme] overrides.
  */
 
+/*
+ * Without this, Tailwind v4's automatic content detection never scans this
+ * package's own .tsx files (Button.tsx, Card.tsx, Badge.tsx, variants.ts) —
+ * it only scans each consuming app's own source tree, not sibling monorepo
+ * packages. That silently drops every class referenced ONLY in variants.ts
+ * (bg-gray-900, rounded-full, px-2.5, etc.) from the compiled CSS: Button
+ * and Badge render with correct text color but no background, padding, or
+ * shape. Classes an app also happens to use directly in its own files
+ * still work, which is what makes this bug easy to miss on a quick look.
+ */
+@source "./src";
+
 @theme {
   /* ---- Typeface --------------------------------------------------------
      var(--font-inter) is set by next/font/google's Inter() on <html> in
