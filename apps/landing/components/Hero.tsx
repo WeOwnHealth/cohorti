@@ -1,9 +1,31 @@
 import { buttonVariants, Badge } from "@cohorti/design-system/components";
+import { HeroVisual } from "./HeroVisual";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-gray-200 bg-white">
-      <div className="mx-auto w-full max-w-6xl px-6 py-24 sm:py-32">
+      {/* Dot-grid texture, faded via a radial mask so it reads as depth, not noise. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-20 opacity-[0.5]"
+        style={{
+          backgroundImage: "radial-gradient(var(--color-gray-300) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+          maskImage: "radial-gradient(ellipse 60% 50% at 50% 0%, black 0%, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(ellipse 60% 50% at 50% 0%, black 0%, transparent 75%)",
+        }}
+      />
+      {/* Soft blue glow behind the headline, matching Attio's radial hero gradient. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px]"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 55% 60% at 50% 10%, var(--color-blue-50) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="mx-auto w-full max-w-6xl px-6 py-20 sm:py-28">
         <div className="mx-auto max-w-3xl text-center">
           <Badge tone="blue" className="mb-6">
             Built on Midnight Network
@@ -32,13 +54,9 @@ export function Hero() {
             </a>
           </div>
         </div>
-      </div>
 
-      {/* Subtle top-fade gradient, matching the soft depth language of both references */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[480px] bg-gradient-to-b from-blue-50/60 to-transparent"
-      />
+        <HeroVisual />
+      </div>
     </section>
   );
 }

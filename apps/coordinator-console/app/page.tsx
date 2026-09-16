@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Badge, Card, CardBody } from "@cohorti/design-system/components";
+import { Badge, Card, CardBody, ClipboardIcon } from "@cohorti/design-system/components";
 import { listAuditTraces } from "@/lib/api";
 
 export default async function TraceListPage() {
@@ -35,11 +35,19 @@ export default async function TraceListPage() {
         <Card>
           <ul className="divide-y divide-gray-100">
             {traces.map((t) => (
-              <li key={t.id} className="flex items-center justify-between px-5 py-4">
-                <div>
-                  <div className="font-medium text-gray-900">Trial {t.trialId}</div>
-                  <div className="mt-0.5 text-sm text-gray-500">
-                    {t.decisions.length} candidates · {t.decisions.filter((d) => d.included).length} included
+              <li
+                key={t.id}
+                className="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-gray-50"
+              >
+                <div className="flex items-center gap-3.5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500">
+                    <ClipboardIcon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Trial {t.trialId}</div>
+                    <div className="mt-0.5 text-sm text-gray-500">
+                      {t.decisions.length} candidates · {t.decisions.filter((d) => d.included).length} included
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">

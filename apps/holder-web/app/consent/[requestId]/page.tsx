@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Badge, Button, Card, CardBody } from "@cohorti/design-system/components";
+import { Badge, Button, Card, CardBody, ProofIcon } from "@cohorti/design-system/components";
 
 /**
  * The consent prompt from README.md's Credential Holder user story, step 3:
@@ -32,9 +32,14 @@ export default function ConsentPage() {
 
   return (
     <div className="mx-auto max-w-lg space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Claim request</h1>
-        <p className="mt-1 text-sm text-gray-500">Request {requestId}</p>
+      <div className="flex items-start gap-4">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
+          <ProofIcon className="h-5 w-5" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Claim request</h1>
+          <p className="mt-1 text-sm text-gray-500">Request {requestId}</p>
+        </div>
       </div>
 
       <Card>
