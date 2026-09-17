@@ -21,6 +21,7 @@
     "@midnight-ntwrk/midnight-js-network-id": "4.1.1",
     "@midnight-ntwrk/midnight-js-node-zk-config-provider": "4.1.1",
     "@midnight-ntwrk/wallet-sdk-abstractions": "*",
+    "@midnight-ntwrk/wallet-sdk-address-format": "^3.1.2",
     "@midnight-ntwrk/wallet-sdk-dust-wallet": "*",
     "@midnight-ntwrk/wallet-sdk-facade": "^4.1.0",
     "@midnight-ntwrk/wallet-sdk-hd": "^3.0.2",
@@ -38,6 +39,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^22.15.21",
+    "@types/ws": "^8.18.1",
     "tsx": "^4.23.13",
     "typescript": "^5.8.3"
   }

@@ -1,0 +1,142 @@
+/**
+ * Passport design tokens — synthesized from live CSS extracted directly off
+ * attio.com and notion.com (computed styles + custom properties, pulled via
+ * browser introspection, not eyeballed). Shared by every frontend surface:
+ * apps/landing, apps/holder-web, apps/coordinator-console.
+ *
+ * What came from where:
+ * - Typeface (Inter), near-black-not-pure-black text on pure white, tight
+ *   negative letter-spacing on headings, systematic multi-layer low-opacity
+ *   shadows, and a token-driven radius scale: shared by both references.
+ * - Warm (not cold-blue) neutral gray scale: Notion's paper-like tone
+ *   (their gray-100 is #f9f9f8, not a cold #f9f9fa) — carried through
+ *   deliberately because it reads warmer and more human for a health
+ *   product than Attio's cooler, more clinical SaaS grays.
+ * - Accent blue: synthesized between Attio's vivid cobalt
+ *   (lab(47.85% 16.78 -73.44)) and Notion's cleaner link blue (#0075de) —
+ *   landed on #2F6FED as a blue that reads as "trust/verification" (this
+ *   product's whole premise) without either site's exact hue.
+ * - Relaxed 1.5 body line-height: Notion's choice, not Attio's tighter
+ *   1.375 — this product has long compliance/spec prose (see root
+ *   README.md), so favor reading comfort over density.
+ *
+ * No dark theme, per explicit direction — :root only, no
+ * prefers-color-scheme or [data-theme] overrides.
+ */
+
+/*
+ * Without this, Tailwind v4's automatic content detection never scans this
+ * package's own .tsx files (Button.tsx, Card.tsx, Badge.tsx, variants.ts) —
+ * it only scans each consuming app's own source tree, not sibling monorepo
+ * packages. That silently drops every class referenced ONLY in variants.ts
+ * (bg-gray-900, rounded-full, px-2.5, etc.) from the compiled CSS: Button
+ * and Badge render with correct text color but no background, padding, or
+ * shape. Classes an app also happens to use directly in its own files
+ * still work, which is what makes this bug easy to miss on a quick look.
+ */
+@source "./src";
+
+@theme {
+  /* ---- Typeface --------------------------------------------------------
+     var(--font-inter) is set by next/font/google's Inter() on <html> in
+     each app's layout.tsx (self-hosted, optimized loading). Falls back to
+     a plain "Inter" family reference if an app hasn't wired that up. */
+  --font-sans:
+    var(--font-inter, "Inter"), -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* ---- Neutral scale — warm paper tone, per Notion ---------------------- */
+  --color-gray-25: #fdfdfc;
+  --color-gray-50: #fafaf9;
+  --color-gray-100: #f5f4f2;
+  --color-gray-200: #e8e6e2;
+  --color-gray-300: #d3d0ca;
+  --color-gray-400: #a8a39b;
+  --color-gray-500: #7c766d;
+  --color-gray-600: #5c5750;
+  --color-gray-700: #433f3a;
+  --color-gray-800: #2a2724;
+  --color-gray-900: #171512;
+  --color-white: #ffffff;
+
+  /* ---- Accent — "verification blue" ------------------------------------- */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #5b93f5;
+  --color-blue-500: #2f6fed;
+  --color-blue-600: #1d4fd8;
+  --color-blue-700: #1739a6;
+  --color-blue-800: #142c7c;
+  --color-blue-900: #101f57;
+
+  /* ---- Semantic (T0/T1/T2 binding tiers; disclosure decisions) ---------- */
+  --color-green-50: #f0faf3;
+  --color-green-500: #1a9c53;
+  --color-green-600: #14803f;
+  --color-amber-50: #fffaeb;
+  --color-amber-500: #d99a1b;
+  --color-amber-600: #b57a12;
+  --color-red-50: #fef2f2;
+  --color-red-500: #e0362e;
+  --color-red-600: #c02a23;
+
+  /* ---- Radius — systematic scale, shared spirit of both references ------ */
+  --radius-xs: 0.25rem; /* 4px  — checkboxes, small chips */
+  --radius-sm: 0.375rem; /* 6px  — inputs, small buttons */
+  --radius-md: 0.5rem; /* 8px  — buttons, default controls */
+  --radius-lg: 0.75rem; /* 12px — cards */
+  --radius-xl: 1rem; /* 16px — large panels, modals */
+  --radius-2xl: 1.25rem; /* 20px — hero panels */
+  --radius-full: 9999px; /* pills, badges, avatars */
+
+  /* ---- Shadow — soft, multi-layer, very low opacity (both references) --- */
+  --shadow-xs: 0px 1px 2px 0px rgba(23, 21, 18, 0.04);
+  --shadow-sm: 0px 1px 3px 0px rgba(23, 21, 18, 0.06), 0px 1px 2px -1px rgba(23, 21, 18, 0.04);
+  --shadow-md: 0px 4px 8px -2px rgba(23, 21, 18, 0.06), 0px 2px 4px -2px rgba(23, 21, 18, 0.04);
+  --shadow-lg: 0px 12px 24px -6px rgba(23, 21, 18, 0.08), 0px 4px 8px -4px rgba(23, 21, 18, 0.04);
+  --shadow-xl: 0px 24px 48px -12px rgba(23, 21, 18, 0.12), 0px 8px 16px -8px rgba(23, 21, 18, 0.06);
+
+  /* ---- Motion — short, eased, matching both references' subtlety ------- */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+
+  /* ---- Display type scale — for hero/marketing headings ------------------ */
+  --text-display-sm: 2.25rem; /* 36px */
+  --text-display-sm--line-height: 2.5rem;
+  --text-display-sm--letter-spacing: -0.02em;
+  --text-display-sm--font-weight: 600;
+
+  --text-display-md: 2.75rem; /* 44px */
+  --text-display-md--line-height: 3rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-md--font-weight: 600;
+
+  --text-display-lg: 3.5rem; /* 56px */
+  --text-display-lg--line-height: 3.75rem;
+  --text-display-lg--letter-spacing: -0.025em;
+  --text-display-lg--font-weight: 600;
+}
+
+:root {
+  /* Semantic aliases — reference these in app code, not raw --color-* scale
+     values, so re-theming later means editing here once. */
+  --background: var(--color-white);
+  --foreground: var(--color-gray-900);
+  --muted-foreground: var(--color-gray-500);
+  --border: var(--color-gray-200);
+  --surface: var(--color-gray-50);
+  --accent: var(--color-blue-500);
+  --accent-foreground: var(--color-white);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}

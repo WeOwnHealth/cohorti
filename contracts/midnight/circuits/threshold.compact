@@ -1,0 +1,9 @@
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+witness biomarkerValue(): Uint<64>;
+
+export circuit proveBelowThreshold(threshold: Uint<64>): Boolean {
+  return disclose(biomarkerValue() < threshold);
+}

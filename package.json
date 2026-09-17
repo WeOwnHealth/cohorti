@@ -1,13 +1,35 @@
 {
-  "name": "trials-monorepo",
+  "name": "passport",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "packageManager": "yarn@4.9.2",
-  "resolutions": {
-    "@midnight-ntwrk/ledger-v8": "8.1.0",
-    "@midnight-ntwrk/wallet-sdk": "1.2.0",
-    "@midnight-ntwrk/compact-js": "2.5.1"
+  "version": "0.0.0",
+  "description": "Project Passport — a verified health-credential layer",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.11 <21 || >=22"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "clean:modules": "find . -name node_modules -type d -prune -exec rm -rf {} +",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "@midnight-ntwrk/ledger-v8": "8.1.0",
+      "@midnight-ntwrk/wallet-sdk": "1.2.0",
+      "@midnight-ntwrk/compact-js": "2.5.1"
+    }
   }
 }
